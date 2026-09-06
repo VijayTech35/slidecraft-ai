@@ -47,7 +47,7 @@ import type { Presentation } from '@/types';
 import { templates } from '@/data/templates';
 import { cn, generateId, formatNumber } from '@/lib/utils';
 import { extractFileContent, type UploadedDocument } from '@/lib/upload';
-import { computePivot, defaultPivot, applyPivotToDeck } from '@/lib/excel';
+import { computePivot, defaultPivot, applyPivotsToDeck } from '@/lib/excel';
 import type { DataWorkbook, PivotAgg, PivotGranularity, PivotResult } from '@/lib/excel';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
@@ -691,20 +691,25 @@ function DatasetPivot({
   );
 }
 
+interface DataSource {
+  id: string;
+  workbook: DataWorkbook;
+  sheetIdx: number;
+  pivotRows: string;
+  pivotValues: string;
+  pivotAgg: PivotAgg;
+  pivotGran: PivotGranularity;
+  pivotLimit: number;
+  pivotRest: boolean;
+}
+
 export default function LandingPage() {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationStep, setGenerationStep] = useState(0);
   const [generationMode, setGenerationMode] = useState<string | null>(null);
   const [docs, setDocs] = useState<Array<UploadedDocument & { id: string }>>([]);
-  const [workbook, setWorkbook] = useState<DataWorkbook | null>(null);
-  const [sheetIdx, setSheetIdx] = useState(0);
-  const [pivotRows, setPivotRows] = useState('');
-  const [pivotValues, setPivotValues] = useState('');
-  const [pivotAgg, setPivotAgg] = useState<PivotAgg>('sum');
-  const [pivotGran, setPivotGran] = useState<PivotGranularity>('month');
-  const [pivotLimit, setPivotLimit] = useState(0);
-  const [pivotRest, setPivotRest] = useState(true);
+  const [sources, setSources] = useState<DataSource[]>([]);
   const [dragging, setDragging] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const promptRef = useRef<HTMLTextAreaElement>(null);
@@ -713,53 +718,62 @@ export default function LandingPage() {
   const { addPresentation, presentations } = useStore();
   const aiAvailable = isAIEnabled();
 
-  const activeSheet = workbook?.sheets[sheetIdx] ?? null;
-  const valOptions = useMemo(
-    () => (activeSheet ? activeSheet.columns : []),
-    [activeSheet]
+  const sourcePivots = useMemo(
+    () =>
+      sources.map((src) => {
+        const sheet = src.workbook.sheets[src.sheetIdx] ?? null;
+        if (!sheet || !src.pivotRows) {
+          return { id: src.id, name: src.workbook.name, pivot: null as PivotResult | null };
+        }
+        const valKey = sheet.columns.some((c) => c.key === src.pivotValues)
+          ? src.pivotValues
+          : sheet.columns[0]?.key;
+        if (!valKey) {
+          return { id: src.id, name: src.workbook.name, pivot: null as PivotResult | null };
+        }
+        const dimIsDate = sheet.columns.find((c) => c.key === src.pivotRows)?.dateLike ?? false;
+        return {
+          id: src.id,
+          name: src.workbook.name,
+          pivot: computePivot(sheet.rows, src.pivotRows, valKey, src.pivotAgg, {
+            granularity: dimIsDate ? src.pivotGran : undefined,
+            limit: src.pivotLimit || undefined,
+            includeRest: src.pivotRest,
+          }),
+        };
+      }),
+    [sources]
   );
-  const dimIsDate =
-    activeSheet?.columns.find((c) => c.key === pivotRows)?.dateLike ?? false;
 
-  const pivot = useMemo<PivotResult | null>(() => {
-    if (!activeSheet || !pivotRows) return null;
-    const valKey = valOptions.some((c) => c.key === pivotValues)
-      ? pivotValues
-      : valOptions[0]?.key;
-    if (!valKey) return null;
-    return computePivot(activeSheet.rows, pivotRows, valKey, pivotAgg, {
-      granularity: dimIsDate ? pivotGran : undefined,
-      limit: pivotLimit || undefined,
-      includeRest: pivotRest,
-    });
-  }, [
-    activeSheet,
-    pivotRows,
-    pivotValues,
-    pivotAgg,
-    pivotGran,
-    pivotLimit,
-    pivotRest,
-    valOptions,
-    dimIsDate,
-  ]);
+  const pivots = sourcePivots.filter(
+    (sp): sp is { id: string; name: string; pivot: PivotResult } => sp.pivot !== null
+  );
+  const activePivot = pivots[0]?.pivot ?? null;
 
-  const handleSheetIdx = (i: number) => {
-    setSheetIdx(i);
-    const sheet = workbook?.sheets[i];
+  const updateSource = (srcId: string, patch: Partial<Omit<DataSource, 'id' | 'workbook'>>) =>
+    setSources((prev) => prev.map((s) => (s.id === srcId ? { ...s, ...patch } : s)));
+
+  const removeSource = (srcId: string) =>
+    setSources((prev) => prev.filter((s) => s.id !== srcId));
+
+  const handleSheetIdx = (srcId: string, i: number) => {
+    const sheet = sources.find((s) => s.id === srcId)?.workbook.sheets[i];
     if (sheet) {
       const fresh = defaultPivot(sheet);
-      setPivotRows(fresh.dimension);
-      setPivotValues(fresh.measure);
-      setPivotAgg(fresh.agg);
-      setPivotGran(fresh.granularity ?? 'month');
+      updateSource(srcId, {
+        sheetIdx: i,
+        pivotRows: fresh.dimension,
+        pivotValues: fresh.measure,
+        pivotAgg: fresh.agg,
+        pivotGran: fresh.granularity ?? 'month',
+      });
     }
   };
 
   const canGenerate =
     Boolean(prompt.trim()) ||
     docs.some((d) => d.text.trim().length > 0) ||
-    pivot !== null;
+    activePivot !== null;
 
   useEffect(() => {
     if (!isGenerating) return;
@@ -788,15 +802,28 @@ export default function LandingPage() {
         }
         if (result.kind === 'data') {
           const first = result.workbook.sheets[0];
+          let source: DataSource = {
+            id: generateId(),
+            workbook: result.workbook,
+            sheetIdx: 0,
+            pivotRows: '',
+            pivotValues: '',
+            pivotAgg: 'sum',
+            pivotGran: 'month',
+            pivotLimit: 0,
+            pivotRest: true,
+          };
           if (first) {
             const fresh = defaultPivot(first);
-            setPivotRows(fresh.dimension);
-            setPivotValues(fresh.measure);
-            setPivotAgg(fresh.agg);
-            setPivotGran(fresh.granularity ?? 'month');
+            source = {
+              ...source,
+              pivotRows: fresh.dimension,
+              pivotValues: fresh.measure,
+              pivotAgg: fresh.agg,
+              pivotGran: fresh.granularity ?? 'month',
+            };
           }
-          setWorkbook(result.workbook);
-          setSheetIdx(0);
+          setSources((prev) => [...prev, source]);
           continue;
         }
         setDocs((prev) => [...prev, { id: generateId(), ...result }]);
@@ -819,7 +846,7 @@ export default function LandingPage() {
       .filter(Boolean)
       .join('\n\n');
 
-    if ((!effectivePrompt.trim() && !pivot) || isGenerating) return;
+    if ((!effectivePrompt.trim() && pivots.length === 0) || isGenerating) return;
     setIsGenerating(true);
     setGenerationStep(0);
     setGenerationMode(null);
@@ -829,24 +856,25 @@ export default function LandingPage() {
     let usedAI = false;
 
     const aiPrompt = (() => {
+      const stat = (n: number, digits = 2) =>
+        Math.abs(n) >= 100000 ? formatNumber(n) : n.toLocaleString('en-US', { maximumFractionDigits: digits });
       const parts: string[] = [
         prompt.trim() ||
-          (pivot
-            ? 'Create a dashboard from the data pivot below. Every KPI and chart must use exactly these numbers.'
+          (pivots.length > 0
+            ? 'Create a dashboard from the data pivots below. Every KPI and chart must use exactly these numbers.'
             : 'Create a presentation about the attached documents:'),
       ];
-      if (pivot) {
-        const stat = (n: number, digits = 2) =>
-          Math.abs(n) >= 100000 ? formatNumber(n) : n.toLocaleString('en-US', { maximumFractionDigits: digits });
-        parts.push(
+      if (pivots.length > 0) {
+        const blocks = pivots.map(({ name, pivot }) =>
           [
-            `DATA PIVOT (from ${workbook?.name ?? 'your data'}):`,
+            `DATA PIVOT (from ${name}):`,
             `Analysis: ${pivot.agg.toUpperCase()} of ${pivot.measure} by ${pivot.dimension}${pivot.granularity ? ` (${pivot.granularity})` : ''}`,
             `Stats: ${pivot.count} records · ${pivot.buckets.length} groups · avg ${stat(pivot.avg)} · min ${stat(pivot.min)} · max ${stat(pivot.max)}`,
             `Leading group: ${pivot.topLabel || 'none'}`,
             ...pivot.buckets.slice(0, 8).map((b) => `- ${b.label}: ${stat(b.value, 0)}${b.share !== undefined ? ` (${Math.round(b.share * 100)}%)` : ''}`),
           ].join('\n')
         );
+        parts.push(blocks.join('\n\n'));
       }
       if (docs.length > 0) {
         parts.push(`Attached document${docs.length > 1 ? 's' : ''}:\n${docText}`);
@@ -865,12 +893,14 @@ export default function LandingPage() {
 
     if (!presentation) {
       presentation = generatePresentation(effectivePrompt);
-      if (pivot) presentation.title = `${pivot.agg}-${pivot.measure} by ${pivot.dimension}`;
+      if (activePivot) presentation.title = `${activePivot.agg}-${activePivot.measure} by ${activePivot.dimension}`;
     }
 
-    if (pivot && presentation) {
-      const withData = applyPivotToDeck(presentation, pivot, workbook?.name ?? 'data');
-      if (withData) presentation = { ...withData, dataPivot: pivot };
+    if (pivots.length > 0 && presentation) {
+      presentation = applyPivotsToDeck(
+        presentation,
+        pivots.map((p) => ({ pivot: p.pivot, source: p.name }))
+      );
     }
 
     if (!usedAI && aiAvailable && !generationMode) {
@@ -1086,26 +1116,34 @@ export default function LandingPage() {
                     </div>
                   )}
 
-                  {workbook && (
-                    <DatasetPivot
-                      workbook={workbook}
-                      sheetIdx={sheetIdx}
-                      onSheetIdx={handleSheetIdx}
-                      pivotRows={pivotRows}
-                      onPivotRows={setPivotRows}
-                      pivotValues={pivotValues}
-                      onPivotValues={setPivotValues}
-                      pivotAgg={pivotAgg}
-                      onPivotAgg={setPivotAgg}
-                      pivotGran={pivotGran}
-                      onPivotGran={setPivotGran}
-                      pivotLimit={pivotLimit}
-                      onPivotLimit={setPivotLimit}
-                      pivotRest={pivotRest}
-                      onPivotRest={setPivotRest}
-                      pivot={pivot}
-                      onRemove={() => setWorkbook(null)}
-                    />
+                  {sources.length > 0 && (
+                    <div className="mt-2.5 space-y-2.5">
+                      {sources.map((src) => {
+                        const sp = sourcePivots.find((x) => x.id === src.id);
+                        return (
+                          <DatasetPivot
+                            key={src.id}
+                            workbook={src.workbook}
+                            sheetIdx={src.sheetIdx}
+                            onSheetIdx={(i) => handleSheetIdx(src.id, i)}
+                            pivotRows={src.pivotRows}
+                            onPivotRows={(v) => updateSource(src.id, { pivotRows: v })}
+                            pivotValues={src.pivotValues}
+                            onPivotValues={(v) => updateSource(src.id, { pivotValues: v })}
+                            pivotAgg={src.pivotAgg}
+                            onPivotAgg={(a) => updateSource(src.id, { pivotAgg: a })}
+                            pivotGran={src.pivotGran}
+                            onPivotGran={(g) => updateSource(src.id, { pivotGran: g })}
+                            pivotLimit={src.pivotLimit}
+                            onPivotLimit={(n) => updateSource(src.id, { pivotLimit: n })}
+                            pivotRest={src.pivotRest}
+                            onPivotRest={(b) => updateSource(src.id, { pivotRest: b })}
+                            pivot={sp?.pivot ?? null}
+                            onRemove={() => removeSource(src.id)}
+                          />
+                        );
+                      })}
+                    </div>
                   )}
                 </div>
                 <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">

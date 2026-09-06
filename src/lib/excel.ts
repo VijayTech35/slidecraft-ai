@@ -289,12 +289,14 @@ export function defaultPivot(sheet: ExcelSheet): {
 const fmt = (n: number): string =>
   Math.abs(n) >= 1000 ? formatNumber(Math.round(n * 10) / 10) : Number.isInteger(n) ? String(n) : n.toFixed(2);
 
-export function applyPivotToDeck(deck: Presentation, pivot: PivotResult, source: string): Presentation {
-  const slide = deck.slides[0];
-  if (!slide) return deck;
+export interface PivotSource {
+  pivot: PivotResult;
+  source: string;
+}
 
+function pivotKpis(pivot: PivotResult): KPI[] {
   const isCount = pivot.agg === 'count';
-  const kpis: KPI[] = [
+  return [
     { label: isCount ? 'Records' : 'Total', value: isCount ? fmt(pivot.count) : fmt(pivot.total), change: isCount ? 'non-empty rows' : pivot.agg.toUpperCase(), changeType: 'positive', icon: 'DollarSign', color: '#a78bfa' },
     { label: isCount ? 'Avg / group' : 'Average', value: fmt(pivot.avg), change: isCount ? 'per bucket' : 'per row', changeType: 'neutral', icon: 'TrendingUp', color: '#f472b6' },
     { label: isCount ? 'Largest group' : 'Maximum', value: fmt(pivot.max), change: 'top value', changeType: 'positive', icon: 'Target', color: '#22d3ee' },
@@ -302,10 +304,12 @@ export function applyPivotToDeck(deck: Presentation, pivot: PivotResult, source:
     { label: 'Top bucket', value: pivot.topLabel.slice(0, 16) || '—', change: pivot.buckets[0] ? fmt(pivot.buckets[0].value) : '', changeType: 'neutral', icon: 'Award', color: '#f59e0b' },
     { label: 'Range', value: `${fmt(pivot.min)}–${fmt(pivot.max)}`, change: isCount ? 'group sizes' : 'min–max', changeType: 'neutral', icon: 'Activity', color: '#8b5cf6' },
   ];
+}
 
+function pivotCharts(pivot: PivotResult): ChartConfig[] {
   const buckets = pivot.buckets.slice(0, 12);
   const type = buckets.length > 1 ? 'bar' : 'pie';
-  const chart: ChartConfig = {
+  const base: ChartConfig = {
     title: `${pivot.agg.toUpperCase()} of ${pivot.measure} by ${pivot.dimension}${pivot.granularity ? ` (${pivot.granularity})` : ''}`,
     subtitle: `${buckets.length} group${buckets.length === 1 ? '' : 's'} from ${pivot.count} data rows`,
     type,
@@ -313,8 +317,7 @@ export function applyPivotToDeck(deck: Presentation, pivot: PivotResult, source:
       (b): ChartDataPoint => ({ name: b.label, value: Math.round(b.value * 100) / 100 })
     ),
   };
-
-  const charts: ChartConfig[] = [chart];
+  const charts: ChartConfig[] = [base];
   if (buckets.length > 1) {
     charts.push({
       title: `${pivot.dimension} share of ${pivot.measure}`,
@@ -325,8 +328,12 @@ export function applyPivotToDeck(deck: Presentation, pivot: PivotResult, source:
       ),
     });
   }
+  return charts;
+}
 
-  const table: TableData = {
+function pivotTable(pivot: PivotResult): TableData {
+  const buckets = pivot.buckets.slice(0, 12);
+  return {
     headers: ['Group', `${pivot.agg.toUpperCase()} ${pivot.measure}`, 'Share'],
     rows: buckets.map((b) => [
       b.label,
@@ -334,25 +341,47 @@ export function applyPivotToDeck(deck: Presentation, pivot: PivotResult, source:
       b.share !== undefined ? `${Math.round(b.share * 100)}%` : '—',
     ]),
   };
+}
 
-  const bottomLine = [
+function pivotBottomLine(pivot: PivotResult): string[] {
+  return [
     `${pivot.agg === 'count' ? 'Largest group' : 'Top value'}: ${pivot.topLabel || '—'} at ${pivot.buckets[0] ? fmt(pivot.buckets[0].value) : 0} for ${pivot.measure}.`,
     `Average ${pivot.measure} is ${fmt(pivot.avg)} across ${pivot.buckets.length} group${pivot.buckets.length === 1 ? '' : 's'}.`,
     `Based on ${fmt(pivot.count)} records, values range from ${fmt(pivot.min)} to ${fmt(pivot.max)}.`,
   ];
+}
+
+export function applyPivotsToDeck(deck: Presentation, sources: PivotSource[]): Presentation {
+  const slide = deck.slides[0];
+  const primary = sources[0]?.pivot;
+  if (!slide || !primary) return deck;
+
+  const charts = sources
+    .flatMap(({ pivot, source }) =>
+      pivotCharts(pivot).map((ch) =>
+        sources.length > 1 ? { ...ch, title: `${ch.title} · ${source}` } : ch
+      )
+    )
+    .slice(0, 6);
+
+  const sourceList = sources.map((s) => s.source);
+  const intro =
+    sources.length === 1
+      ? `This dashboard was generated from your ${sourceList[0]} — a pivot of ${primary.measure} by ${primary.dimension} across ${primary.count} records.`
+      : `This dashboard was generated from ${sourceList.length} data sources (${sourceList.join(', ')}) — each one pivoted and visualized.`;
 
   const content = {
     ...slide.content,
-    kpis,
+    kpis: pivotKpis(primary),
     charts,
-    table,
-    intro: `This dashboard was generated from your ${source} — a pivot of ${pivot.measure} by ${pivot.dimension} across ${pivot.count} records.`,
+    table: pivotTable(primary),
+    intro,
     analysis:
       slide.content.analysis ||
-      `${pivot.topLabel || 'No'} leads with ${
-        pivot.buckets[0] ? fmt(pivot.buckets[0].value) : 0
-      } for ${pivot.measure}.`,
-    items: bottomLine,
+      `${primary.topLabel || 'No'} leads with ${
+        primary.buckets[0] ? fmt(primary.buckets[0].value) : 0
+      } for ${primary.measure}.`,
+    items: pivotBottomLine(primary),
   };
 
   delete content.sections;
@@ -362,5 +391,9 @@ export function applyPivotToDeck(deck: Presentation, pivot: PivotResult, source:
   delete content.timeline;
   delete content.team;
 
-  return { ...deck, dataPivot: pivot, slides: [{ ...slide, content }] };
+  return { ...deck, dataPivot: primary, slides: [{ ...slide, content }] };
+}
+
+export function applyPivotToDeck(deck: Presentation, pivot: PivotResult, source: string): Presentation {
+  return applyPivotsToDeck(deck, [{ pivot, source }]);
 }
