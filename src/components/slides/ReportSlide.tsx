@@ -1,10 +1,13 @@
 import { cn } from '@/lib/utils';
+import { CalendarDays, Gauge, BarChart3 } from 'lucide-react';
 import type { Slide, Theme, SlideChart, SlideLayout, SWOTData } from '@/types';
 import ChartBarSlide from './ChartBarSlide';
 import ChartLineSlide from './ChartLineSlide';
 import ChartPieSlide from './ChartPieSlide';
 import ChartAreaSlide from './ChartAreaSlide';
 import ChartDonutSlide from './ChartDonutSlide';
+import ChartComboSlide from './ChartComboSlide';
+import ChartFunnelSlide from './ChartFunnelSlide';
 
 interface ReportSlideProps {
   slide: Slide;
@@ -18,10 +21,12 @@ const CHART_COMPONENTS: Record<string, React.ComponentType<{ slide: Slide; theme
   pie: ChartPieSlide,
   area: ChartAreaSlide,
   donut: ChartDonutSlide,
+  combo: ChartComboSlide,
+  funnel: ChartFunnelSlide,
 };
 
 function ChartView({ chart, theme }: { chart: SlideChart; theme: Theme }) {
-  const layoutName = (Object.prototype.hasOwnProperty.call(CHART_COMPONENTS, chart.type) ? chart.type : 'bar') as 'bar' | 'line' | 'pie' | 'area' | 'donut';
+  const layoutName = (Object.prototype.hasOwnProperty.call(CHART_COMPONENTS, chart.type) ? chart.type : 'bar') as 'bar' | 'line' | 'pie' | 'area' | 'donut' | 'combo' | 'funnel';
   const Layout = CHART_COMPONENTS[layoutName];
   const fakeSlide: Slide = {
     id: 'chart-fake',
@@ -30,6 +35,7 @@ function ChartView({ chart, theme }: { chart: SlideChart; theme: Theme }) {
       title: chart.title || 'Trends',
       subtitle: chart.subtitle || '',
       chartData: chart.data,
+      chartSecondaryData: chart.secondaryData,
       chartType: chart.type,
     },
     order: 0,
@@ -42,6 +48,37 @@ const priorityStyles: Record<string, { label: string; className: string }> = {
   medium: { label: 'Medium', className: 'bg-amber-500/10 text-amber-700 border-amber-200' },
   low: { label: 'Low', className: 'bg-blue-500/10 text-blue-700 border-blue-200' },
 };
+
+function KpiSparkline({
+  values,
+  color,
+  strokeWidth = 2,
+}: {
+  values: number[];
+  color: string;
+  strokeWidth?: number;
+}) {
+  if (!values || values.length < 2) return null;
+  const w = 120;
+  const h = 40;
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const span = max - min || 1;
+  const pad = 4;
+  const pts = values.map((v, i) => {
+    const x = pad + (i / (values.length - 1)) * (w - pad * 2);
+    const y = h - pad - ((v - min) / span) * (h - pad * 2);
+    return [x, y] as const;
+  });
+  const line = pts.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+  const area = `${line} L${pts[pts.length - 1][0].toFixed(1)},${h} L${pts[0][0].toFixed(1)},${h} Z`;
+  return (
+    <svg width="100%" viewBox={`0 0 ${w} ${h}`} className="block" preserveAspectRatio="none" aria-hidden="true">
+      <path d={area} fill={color} opacity={0.12} />
+      <path d={line} fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 function SectionHeading({ theme, index, title }: { theme: Theme; index: string; title: string }) {
   return (
@@ -64,6 +101,7 @@ export default function ReportSlide({ slide, theme: t, isThumbnail }: ReportSlid
   const charts = content.charts || [];
   const swot: SWOTData = content.swot || { strengths: [], weaknesses: [], opportunities: [], threats: [] };
   const image = content.image?.src;
+  const sparkBase = (charts[0]?.data || []).map((d) => d.value || 0);
   let sectionNumber = 0;
   const nextIndex = () => String(++sectionNumber).padStart(2, '0');
 
@@ -132,6 +170,48 @@ export default function ReportSlide({ slide, theme: t, isThumbnail }: ReportSlid
 
       {/* Body */}
       <div className="max-w-5xl mx-auto px-8 md:px-12 py-12 space-y-14">
+        <div
+          className="flex flex-col md:flex-row md:items-center gap-4 justify-between rounded-2xl border px-5 py-4"
+          style={{ borderColor: t.colors.border, background: t.colors.surface }}
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 text-white" style={{ background: t.colors.gradient }}>
+              <CalendarDays className="w-4 h-4" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: t.colors.primary }}>
+                Live dashboard
+              </p>
+              <p className="text-sm font-semibold truncate" style={{ color: t.colors.text }}>
+                {content.subtitle || content.title}
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold border"
+              style={{ borderColor: t.colors.border, color: t.colors.textSecondary }}
+            >
+              <CalendarDays className="w-3 h-3" />
+              As of {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            </span>
+            <span
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold border"
+              style={{ borderColor: t.colors.border, color: t.colors.textSecondary }}
+            >
+              <Gauge className="w-3 h-3" />
+              {content.kpis?.length || 0} metrics
+            </span>
+            <span
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold border"
+              style={{ borderColor: t.colors.border, color: t.colors.textSecondary }}
+            >
+              <BarChart3 className="w-3 h-3" />
+              {charts.length} visual{charts.length === 1 ? '' : 's'}
+            </span>
+          </div>
+        </div>
+
         {content.kpis && content.kpis.length > 0 && (
           <section id="report-kpis">
             <SectionHeading theme={t} index={nextIndex()} title="Key numbers at a glance" />
@@ -139,32 +219,39 @@ export default function ReportSlide({ slide, theme: t, isThumbnail }: ReportSlid
               {content.kpis.map((kpi, i) => (
                 <div
                   key={i}
-                  className="rounded-xl border p-5 relative overflow-hidden"
+                  className="rounded-xl border p-5 relative overflow-hidden group"
                   style={{ borderColor: t.colors.border, background: t.colors.surface }}
                 >
                   <div
                     className="absolute top-0 left-0 right-0 h-1"
                     style={{ background: kpi.color || t.colors.chart1 }}
                   />
-                  <p className="text-xs font-medium uppercase tracking-wide" style={{ color: t.colors.textSecondary }}>
-                    {kpi.label}
-                  </p>
+                  <div className="flex items-start justify-between gap-3">
+                    <p className="text-xs font-medium uppercase tracking-wide" style={{ color: t.colors.textSecondary }}>
+                      {kpi.label}
+                    </p>
+                    {kpi.change && (
+                      <span
+                        className={cn(
+                          'inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full',
+                          kpi.changeType === 'negative'
+                            ? 'bg-red-500/10 text-red-600'
+                            : kpi.changeType === 'positive'
+                              ? 'bg-emerald-500/10 text-emerald-600'
+                              : 'bg-gray-500/10 text-gray-400'
+                        )}
+                      >
+                        {kpi.changeType === 'positive' ? '▲' : kpi.changeType === 'negative' ? '▼' : '•'} {kpi.change}
+                      </span>
+                    )}
+                  </div>
                   <p className="mt-2 text-2xl md:text-3xl font-bold tracking-tight" style={{ color: t.colors.text }}>
                     {kpi.value}
                   </p>
-                  {kpi.change && (
-                    <p
-                      className={cn(
-                        'mt-1 text-xs font-semibold',
-                        kpi.changeType === 'negative'
-                          ? 'text-red-500'
-                          : kpi.changeType === 'positive'
-                            ? 'text-emerald-600'
-                            : t.colors.textSecondary
-                      )}
-                    >
-                      {kpi.change}
-                    </p>
+                  {((kpi.trend && kpi.trend.length >= 2) || sparkBase.length >= 2) && (
+                    <div className="mt-2 h-10 -mx-1 opacity-80 transition-opacity group-hover:opacity-100">
+                      <KpiSparkline values={kpi.trend && kpi.trend.length >= 2 ? kpi.trend : sparkBase} color={kpi.color || t.colors.chart1} />
+                    </div>
                   )}
                 </div>
               ))}

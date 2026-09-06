@@ -14,6 +14,8 @@ export type SlideLayout =
   | 'chart-line'
   | 'chart-area'
   | 'chart-donut'
+  | 'chart-combo'
+  | 'chart-funnel'
   | 'timeline'
   | 'table'
   | 'conclusion'
@@ -72,6 +74,7 @@ export interface KPI {
   changeType?: 'positive' | 'negative' | 'neutral';
   icon?: string;
   color?: string;
+  trend?: number[];
 }
 
 export interface ChartDataPoint {
@@ -148,6 +151,7 @@ export interface SlideContent {
   kpis?: KPI[];
   charts?: SlideChart[];
   chartData?: ChartDataPoint[];
+  chartSecondaryData?: ChartDataPoint[];
   chartType?: string;
   steps?: WorkflowStep[];
   processSteps?: ProcessStep[];

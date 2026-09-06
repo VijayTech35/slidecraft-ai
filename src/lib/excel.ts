@@ -296,13 +296,14 @@ export interface PivotSource {
 
 function pivotKpis(pivot: PivotResult): KPI[] {
   const isCount = pivot.agg === 'count';
+  const trend = () => pivot.buckets.slice(0, 8).map((b) => b.value);
   return [
-    { label: isCount ? 'Records' : 'Total', value: isCount ? fmt(pivot.count) : fmt(pivot.total), change: isCount ? 'non-empty rows' : pivot.agg.toUpperCase(), changeType: 'positive', icon: 'DollarSign', color: '#a78bfa' },
-    { label: isCount ? 'Avg / group' : 'Average', value: fmt(pivot.avg), change: isCount ? 'per bucket' : 'per row', changeType: 'neutral', icon: 'TrendingUp', color: '#f472b6' },
-    { label: isCount ? 'Largest group' : 'Maximum', value: fmt(pivot.max), change: 'top value', changeType: 'positive', icon: 'Target', color: '#22d3ee' },
-    { label: 'Groups', value: fmt(pivot.buckets.length), change: 'buckets', changeType: 'neutral', icon: 'PieChart', color: '#10b981' },
-    { label: 'Top bucket', value: pivot.topLabel.slice(0, 16) || '—', change: pivot.buckets[0] ? fmt(pivot.buckets[0].value) : '', changeType: 'neutral', icon: 'Award', color: '#f59e0b' },
-    { label: 'Range', value: `${fmt(pivot.min)}–${fmt(pivot.max)}`, change: isCount ? 'group sizes' : 'min–max', changeType: 'neutral', icon: 'Activity', color: '#8b5cf6' },
+    { label: isCount ? 'Records' : 'Total', value: isCount ? fmt(pivot.count) : fmt(pivot.total), change: isCount ? 'non-empty rows' : pivot.agg.toUpperCase(), changeType: 'positive', icon: 'DollarSign', color: '#a78bfa', trend: trend() },
+    { label: isCount ? 'Avg / group' : 'Average', value: fmt(pivot.avg), change: isCount ? 'per bucket' : 'per row', changeType: 'neutral', icon: 'TrendingUp', color: '#f472b6', trend: trend() },
+    { label: isCount ? 'Largest group' : 'Maximum', value: fmt(pivot.max), change: 'top value', changeType: 'positive', icon: 'Target', color: '#22d3ee', trend: trend() },
+    { label: 'Groups', value: fmt(pivot.buckets.length), change: 'buckets', changeType: 'neutral', icon: 'PieChart', color: '#10b981', trend: trend() },
+    { label: 'Top bucket', value: pivot.topLabel.slice(0, 16) || '—', change: pivot.buckets[0] ? fmt(pivot.buckets[0].value) : '', changeType: 'neutral', icon: 'Award', color: '#f59e0b', trend: trend() },
+    { label: 'Range', value: `${fmt(pivot.min)}–${fmt(pivot.max)}`, change: isCount ? 'group sizes' : 'min–max', changeType: 'neutral', icon: 'Activity', color: '#8b5cf6', trend: trend() },
   ];
 }
 

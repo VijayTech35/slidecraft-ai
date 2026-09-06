@@ -33,7 +33,7 @@ export interface DeckSpec {
   conclusionPoints?: string[];
 }
 
-const CHART_TYPES = ['bar', 'line', 'area', 'pie', 'donut'];
+const CHART_TYPES = ['bar', 'line', 'area', 'pie', 'donut', 'combo', 'funnel'];
 const PRIORITIES = ['high', 'medium', 'low'];
 const ICON_ALLOWLIST = [
   'TrendingUp', 'TrendingDown', 'Target', 'DollarSign', 'Users', 'BarChart3', 'PieChart',

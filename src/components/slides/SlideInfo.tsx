@@ -64,6 +64,14 @@ const DESCRIPTIONS: Record<SlideLayout, { title: string; body: string }> = {
     title: 'Donut Chart',
     body: 'A pie variant with a hole in the middle, showing the total prominently. The right column lists each segment with its share.',
   },
+  'chart-combo': {
+    title: 'Combo Chart',
+    body: 'Power BI style combination visual: bars for actual values with a line overlay for the running total on a second axis.',
+  },
+  'chart-funnel': {
+    title: 'Funnel Chart',
+    body: 'Shows stages shrinking from top to bottom. Ideal for pipeline and conversion analysis; legend lists each stage with percentage.',
+  },
   timeline: {
     title: 'Timeline',
     body: 'Milestones laid out along a horizontal line. Useful for project roadmaps and key achievements over time.',

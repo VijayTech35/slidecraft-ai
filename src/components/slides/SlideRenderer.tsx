@@ -15,6 +15,8 @@ import ChartPieSlide from './ChartPieSlide';
 import ChartLineSlide from './ChartLineSlide';
 import ChartAreaSlide from './ChartAreaSlide';
 import ChartDonutSlide from './ChartDonutSlide';
+import ChartComboSlide from './ChartComboSlide';
+import ChartFunnelSlide from './ChartFunnelSlide';
 import TimelineSlide from './TimelineSlide';
 import TableSlide from './TableSlide';
 import ConclusionSlide from './ConclusionSlide';
@@ -50,6 +52,8 @@ const layoutMap: Record<SlideLayout, React.ComponentType<{ slide: Slide; theme: 
   'chart-line': ChartLineSlide,
   'chart-area': ChartAreaSlide,
   'chart-donut': ChartDonutSlide,
+  'chart-combo': ChartComboSlide,
+  'chart-funnel': ChartFunnelSlide,
   timeline: TimelineSlide,
   table: TableSlide,
   metrics: MetricsSlide,

@@ -50,6 +50,8 @@ const layoutOptions: { value: SlideLayout; label: string }[] = [
   { value: 'chart-line', label: 'Line Chart' },
   { value: 'chart-area', label: 'Area Chart' },
   { value: 'chart-donut', label: 'Donut Chart' },
+  { value: 'chart-combo', label: 'Combo Chart' },
+  { value: 'chart-funnel', label: 'Funnel Chart' },
   { value: 'timeline', label: 'Timeline' },
   { value: 'content', label: 'Content' },
   { value: 'metrics', label: 'Metrics' },

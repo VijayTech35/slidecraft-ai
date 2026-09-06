@@ -20,6 +20,7 @@ export interface ChartConfig {
   subtitle?: string;
   type: string;
   data: ChartDataPoint[];
+  secondaryData?: ChartDataPoint[];
 }
 
 export interface CategoryData {
@@ -1174,11 +1175,34 @@ function createSlide(layout: SlideLayout, content: Slide['content'], order: numb
   };
 }
 
-function createReportSlide(cat: CategoryData, prompt: string, order: number): Slide {
+function createReportSlide(cat: CategoryData, prompt: string, order: number, category: string): Slide {
   const charts: ChartConfig[] =
     cat.charts && cat.charts.length > 0
       ? cat.charts
       : [{ title: 'Performance Trends', subtitle: 'Monthly and quarterly performance data', type: cat.mainChartType, data: cat.mainChartData }];
+
+  if (cat.mainChartData.length >= 3) {
+    let running = 0;
+    charts.push({
+      title: 'Trend & cumulative runway',
+      subtitle: 'Actual values with a running total',
+      type: 'combo',
+      data: cat.mainChartData,
+      secondaryData: cat.mainChartData.map((d) => {
+        running += d.value || 0;
+        return { name: d.name, value: running };
+      }),
+    });
+  }
+  if (cat.mainChartData.length >= 4 && ['sales', 'startup', 'marketing', 'technology'].includes(category)) {
+    const stageData = [...cat.mainChartData].sort((a, b) => b.value - a.value).slice(0, 4);
+    charts.push({
+      title: `${category === 'sales' ? 'Pipeline' : 'Growth'} funnel`,
+      subtitle: 'Largest to smallest segment — conversion shape',
+      type: 'funnel',
+      data: stageData,
+    });
+  }
 
   return createSlide('report', {
     title: cat.title,
@@ -1203,13 +1227,14 @@ function createReportSlide(cat: CategoryData, prompt: string, order: number): Sl
 }
 
 export function buildDeck(cat: CategoryData, prompt: string): Presentation {
+  const category = detectCategory(prompt);
   const now = new Date().toISOString();
 
   return {
     id: generateId(),
     title: cat.title,
     prompt,
-    slides: [createReportSlide(cat, prompt, 0)],
+    slides: [createReportSlide(cat, prompt, 0, category)],
     theme: cat.theme,
     createdAt: now,
     updatedAt: now,
