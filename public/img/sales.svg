@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Sales funnel illustration">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111827"/>
+      <stop offset="1" stop-color="#065f46"/>
+    </linearGradient>
+    <pattern id="dots" width="48" height="48" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.5" fill="#ffffff"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#dots)" opacity="0.12"/>
+  <circle cx="150" cy="150" r="340" fill="#ffffff" opacity="0.05"/>
+  <circle cx="1450" cy="780" r="420" fill="#ffffff" opacity="0.04"/>
+  <g>
+    <path d="M540 260 L1060 260 L940 430 L660 430 Z" fill="#34d399" opacity="0.95"/>
+    <path d="M660 430 L940 430 L850 580 L750 580 Z" fill="#6ee7b7" opacity="0.9"/>
+    <path d="M750 580 L850 580 L810 700 L790 700 Z" fill="#a7f3d0" opacity="0.9"/>
+  </g>
+  <circle cx="330" cy="700" r="26" fill="#fbbf24"/>
+  <circle cx="330" cy="700" r="52" fill="#fbbf24" opacity="0.35"/>
+  <circle cx="330" cy="700" r="80" fill="#fbbf24" opacity="0.18"/>
+  <path d="M760 130 L820 130 L820 200 L760 200 Z" fill="#fde68a" opacity="0.9"/>
+  <path d="M820 190 L920 230 L820 300 L820 210" fill="#fde68a" opacity="0.6"/>
+</svg>

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Financial performance illustration">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#1e3a8a"/>
+    </linearGradient>
+    <pattern id="dots" width="48" height="48" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.5" fill="#ffffff"/>
+    </pattern>
+    <linearGradient id="b1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="b2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#34d399"/>
+      <stop offset="1" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#dots)" opacity="0.12"/>
+  <circle cx="1340" cy="150" r="350" fill="#ffffff" opacity="0.05"/>
+  <circle cx="200" cy="820" r="430" fill="#ffffff" opacity="0.04"/>
+  <g>
+    <rect x="470" y="470" width="110" height="220" rx="16" fill="url(#b1)"/>
+    <rect x="640" y="400" width="110" height="290" rx="16" fill="url(#b2)"/>
+    <rect x="810" y="320" width="110" height="370" rx="16" fill="url(#b1)"/>
+    <rect x="980" y="240" width="110" height="450" rx="16" fill="url(#b2)"/>
+  </g>
+  <g stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.95">
+    <path d="M430 700 L1190 700" stroke-width="8"/>
+    <path d="M1100 716 L1190 700 L1094 668" stroke-width="14" stroke="#ffffff" fill="#ffffff"/>
+  </g>
+  <circle cx="430" cy="700" r="12" fill="#fde68a"/>
+  <circle cx="1190" cy="700" r="12" fill="#fde68a"/>
+</svg>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Abstract overview illustration">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#334155"/>
+    </linearGradient>
+    <pattern id="dots" width="48" height="48" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.5" fill="#ffffff"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#dots)" opacity="0.12"/>
+  <circle cx="250" cy="730" r="380" fill="#ffffff" opacity="0.05"/>
+  <circle cx="1380" cy="160" r="340" fill="#ffffff" opacity="0.05"/>
+  <g fill="none" stroke-width="10">
+    <circle cx="800" cy="450" r="230" stroke="#94a3b8" opacity="0.9"/>
+    <circle cx="800" cy="450" r="330" stroke="#94a3b8" opacity="0.5"/>
+    <circle cx="800" cy="450" r="420" stroke="#94a3b8" opacity="0.3"/>
+  </g>
+  <path d="M800 450 L1010 330" stroke="#fbbf24" stroke-width="14" stroke-linecap="round"/>
+  <path d="M800 450 L680 580" stroke="#38bdf8" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="800" cy="450" r="58" fill="#fbbf24"/>
+  <circle cx="1010" cy="330" r="26" fill="#38bdf8"/>
+  <circle cx="680" cy="580" r="26" fill="#e879f9"/>
+  <rect x="330" y="620" width="70" height="150" rx="16" fill="#38bdf8" opacity="0.85"/>
+  <rect x="490" y="670" width="70" height="100" rx="16" fill="#a78bfa" opacity="0.85"/>
+  <path d="M1200 500 L1230 440 L1260 500 L1270 600 L1200 550 Z" fill="#fde68a" opacity="0.8"/>
+</svg>

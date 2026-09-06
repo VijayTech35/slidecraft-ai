@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Startup rocket illustration">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#18181b"/>
+      <stop offset="1" stop-color="#581c87"/>
+    </linearGradient>
+    <pattern id="dots" width="48" height="48" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.5" fill="#ffffff"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#dots)" opacity="0.12"/>
+  <circle cx="1480" cy="740" r="420" fill="#ffffff" opacity="0.05"/>
+  <g>
+    <path d="M720 290 C 720 150 880 150 880 290 L 880 540 L 720 540 Z" fill="#f8fafc"/>
+    <path d="M718 380 C 690 430 690 500 700 540 L 720 470 Z" fill="#94a3b8"/>
+    <path d="M882 380 C 910 430 910 500 900 540 L 880 470 Z" fill="#94a3b8"/>
+    <path d="M700 540 C 560 620 640 720 745 590 Z" fill="#fb7185"/>
+    <path d="M900 540 C 1040 620 960 720 855 590 Z" fill="#fb7185"/>
+    <circle cx="800" cy="360" r="52" fill="#38bdf8"/>
+    <circle cx="800" cy="360" r="28" fill="#bae6fd"/>
+  </g>
+  <path d="M740 540 L860 540 L820 700 Z" fill="#f97316"/>
+  <path d="M775 540 L825 540 L800 640 Z" fill="#fbbf24"/>
+  <g fill="#ffffff">
+    <circle cx="420" cy="220" r="10"/>
+    <circle cx="1150" cy="240" r="13"/>
+    <circle cx="1250" cy="420" r="8"/>
+    <circle cx="350" cy="500" r="12"/>
+    <circle cx="1200" cy="620" r="9"/>
+    <circle cx="500" cy="120" r="7"/>
+  </g>
+  <path d="M1120 700 L1150 660 L1180 700 L1150 740 Z" fill="#e9d5ff" opacity="0.9"/>
+  <path d="M1140 720 L1160 690 M1170 720 L1150 690" stroke="#a78bfa" stroke-width="8" stroke-linecap="round" opacity="0.8"/>
+</svg>
