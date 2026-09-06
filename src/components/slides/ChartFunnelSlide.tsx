@@ -15,6 +15,8 @@ export default function ChartFunnelSlide({ slide, theme: themeProp, isThumbnail 
 
   const colors = [t.colors.chart1, t.colors.chart2, t.colors.chart3, t.colors.chart4, t.colors.chart5];
   const top = data[0]?.value || 0;
+  const last = data[data.length - 1]?.value || 0;
+  const overall = top > 0 && last > 0 ? Math.round((last / top) * 100) : 0;
 
   return (
     <div
@@ -42,10 +44,18 @@ export default function ChartFunnelSlide({ slide, theme: themeProp, isThumbnail 
         </h2>
         {slide.content.subtitle && (
           <p
-            className={cn(isThumbnail ? 'text-[8px]' : 'text-sm')}
+            className={cn('flex items-center gap-2 text-sm', isThumbnail && 'text-[8px]')}
             style={{ color: t.colors.textSecondary }}
           >
             {slide.content.subtitle}
+            {!isThumbnail && data.length >= 2 && (
+              <span
+                className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold border"
+                style={{ borderColor: t.colors.border, color: t.colors.primary, background: t.colors.surface }}
+              >
+                ↓ {overall}% end-to-end
+              </span>
+            )}
           </p>
         )}
       </div>
@@ -89,6 +99,7 @@ export default function ChartFunnelSlide({ slide, theme: themeProp, isThumbnail 
                     index={index}
                     colors={colors}
                     stroke={t.colors.background}
+                    opacity={1 - Math.min(index * 0.07, 0.28)}
                   />
                 ))}
                 {!isThumbnail && (
@@ -109,18 +120,23 @@ export default function ChartFunnelSlide({ slide, theme: themeProp, isThumbnail 
         {!isThumbnail && (
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 mt-3">
             {data.slice(0, 4).map((d, i) => {
-              const pct = top ? Math.round(((d.value || 0) / top) * 100) : 0;
+              const prev = i > 0 ? data[i - 1]?.value || 0 : 0;
+              const conv = prev > 0 ? Math.round(((d.value || 0) / prev) * 100) : 100;
               return (
                 <div
                   key={i}
-                  className="flex items-center gap-2.5 rounded-xl border px-3 py-2"
+                  className="flex items-center gap-2.5 rounded-xl border px-3 py-2 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
                   style={{ borderColor: t.colors.border, backgroundColor: t.colors.surface }}
                 >
                   <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: colors[i % colors.length] }} />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-xs font-medium">{d.name}</p>
                     <p className="text-[11px]" style={{ color: t.colors.textSecondary }}>
-                      {(d.value || 0).toLocaleString()} · {pct}%
+                      {(d.value || 0).toLocaleString()}
+                      {i > 0 && (
+                        <span className="text-emerald-600 font-semibold"> · {conv}%</span>
+                      )}
+                      <span className="opacity-70"> of top</span>
                     </p>
                   </div>
                 </div>
@@ -137,15 +153,18 @@ function TrapezoidCell({
   index,
   colors,
   stroke,
+  opacity,
 }: {
   index: number;
   colors: string[];
   stroke: string;
+  opacity: number;
 }) {
   return (
     <Trapezoid
       fill={colors[index % colors.length]}
-      strokeWidth={2}
+      fillOpacity={opacity}
+      strokeWidth={1.5}
       stroke={stroke}
     />
   );

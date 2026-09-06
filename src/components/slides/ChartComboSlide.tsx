@@ -10,6 +10,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  LabelList,
 } from 'recharts';
 import SlideDecor from './SlideDecor';
 
@@ -34,6 +35,14 @@ export default function ChartComboSlide({ slide, theme: themeProp, isThumbnail }
 
   const barTotal = data.reduce((sum, d) => sum + (d.value || 0), 0);
   const linePeak = cumulative.reduce((mx, d) => Math.max(mx, d.value || 0), 0);
+
+  const fmt = (v: unknown): string => {
+    const n = typeof v === 'number' ? v : typeof v === 'string' ? Number(v) : 0;
+    if (Number.isNaN(n)) return String(v ?? '');
+    return Math.abs(n) >= 1000 ? `${+(n / 1000).toFixed(1)}k` : String(n);
+  };
+
+  const gradId = `combo-grad-${slide.id}`;
 
   const cards = [
     { label: 'Total', value: barTotal.toLocaleString(), color: t.colors.chart1 },
@@ -80,18 +89,27 @@ export default function ChartComboSlide({ slide, theme: themeProp, isThumbnail }
         <div className="w-full h-full">
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke={t.colors.border} />
+              <defs>
+                <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={t.colors.chart1} stopOpacity={0.95} />
+                  <stop offset="100%" stopColor={t.colors.chart1} stopOpacity={0.55} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke={t.colors.border} vertical={false} />
               <XAxis
                 dataKey="name"
                 tick={{ fill: t.colors.textSecondary, fontSize: isThumbnail ? 8 : 12 }}
                 tickLine={false}
                 axisLine={{ stroke: t.colors.border }}
+                interval={isThumbnail ? 'preserveStartEnd' : 0}
               />
               <YAxis
                 yAxisId="left"
                 tick={{ fill: t.colors.textSecondary, fontSize: isThumbnail ? 8 : 12 }}
                 tickLine={false}
                 axisLine={false}
+                tickFormatter={fmt}
+                width={isThumbnail ? 24 : 40}
               />
               <YAxis
                 yAxisId="right"
@@ -100,9 +118,10 @@ export default function ChartComboSlide({ slide, theme: themeProp, isThumbnail }
                 tick={{ fill: t.colors.textSecondary, fontSize: 12 }}
                 tickLine={false}
                 axisLine={false}
+                tickFormatter={fmt}
               />
               <Tooltip
-                cursor={{ fill: 'rgba(0,0,0,0.05)' }}
+                cursor={{ fill: t.colors.chart1, fillOpacity: 0.06 }}
                 contentStyle={{
                   borderRadius: 12,
                   boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
@@ -110,6 +129,7 @@ export default function ChartComboSlide({ slide, theme: themeProp, isThumbnail }
                   borderColor: t.colors.border,
                   backgroundColor: t.colors.surface,
                   color: t.colors.text,
+                  fontSize: 12,
                 }}
                 formatter={(value, name) => {
                   const num =
@@ -123,7 +143,7 @@ export default function ChartComboSlide({ slide, theme: themeProp, isThumbnail }
               />
               {!isThumbnail && (
                 <Legend
-                  wrapperStyle={{ color: t.colors.textSecondary, fontSize: 12 }}
+                  wrapperStyle={{ color: t.colors.textSecondary, fontSize: 12, paddingTop: 4 }}
                 />
               )}
               <Bar
@@ -131,11 +151,23 @@ export default function ChartComboSlide({ slide, theme: themeProp, isThumbnail }
                 dataKey="value"
                 name="Value"
                 radius={[6, 6, 0, 0]}
-                fill={t.colors.chart1}
-                animationDuration={800}
+                fill={`url(#${gradId})`}
+                isAnimationActive={!isThumbnail}
+                animationDuration={900}
                 animationBegin={100}
                 animationEasing="ease-out"
-              />
+              >
+                {!isThumbnail && data.length <= 8 && (
+                  <LabelList
+                    dataKey="value"
+                    position="top"
+                    offset={6}
+                    fill={t.colors.textSecondary}
+                    fontSize={11}
+                    formatter={fmt}
+                  />
+                )}
+              </Bar>
               <Line
                 yAxisId="right"
                 data={cumulative}
@@ -144,10 +176,13 @@ export default function ChartComboSlide({ slide, theme: themeProp, isThumbnail }
                 type="monotone"
                 stroke={t.colors.chart2}
                 strokeWidth={isThumbnail ? 2 : 3}
-                dot={{ fill: t.colors.chart2, r: isThumbnail ? 1 : 3, strokeWidth: 0 }}
-                animationDuration={800}
-                animationBegin={200}
+                strokeLinecap="round"
+                isAnimationActive={!isThumbnail}
+                animationDuration={900}
+                animationBegin={250}
                 animationEasing="ease-out"
+                dot={{ fill: t.colors.chart2, r: isThumbnail ? 1 : 3, strokeWidth: 0 }}
+                activeDot={{ r: 5, strokeWidth: 2, stroke: t.colors.background }}
               />
             </ComposedChart>
           </ResponsiveContainer>
@@ -158,7 +193,7 @@ export default function ChartComboSlide({ slide, theme: themeProp, isThumbnail }
             {cards.map((card) => (
               <div
                 key={card.label}
-                className="relative rounded-xl border p-3 overflow-hidden shadow-sm"
+                className="relative rounded-xl border p-3 overflow-hidden shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
                 style={{ borderColor: t.colors.border, backgroundColor: t.colors.surface }}
               >
                 <div

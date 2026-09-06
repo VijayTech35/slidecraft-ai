@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { useId } from 'react';
 import { CalendarDays, Gauge, BarChart3 } from 'lucide-react';
 import type { Slide, Theme, SlideChart, SlideLayout, SWOTData } from '@/types';
 import ChartBarSlide from './ChartBarSlide';
@@ -56,8 +57,9 @@ function KpiSparkline({
 }: {
   values: number[];
   color: string;
-  strokeWidth?: number;
+strokeWidth?: number;
 }) {
+  const gradId = useId();
   if (!values || values.length < 2) return null;
   const w = 120;
   const h = 40;
@@ -72,10 +74,45 @@ function KpiSparkline({
   });
   const line = pts.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
   const area = `${line} L${pts[pts.length - 1][0].toFixed(1)},${h} L${pts[0][0].toFixed(1)},${h} Z`;
+  const [lastX, lastY] = pts[pts.length - 1];
+  const pathLen = pts.reduce((len, [x, y], i) => {
+    if (i === 0) return len;
+    const [px, py] = pts[i - 1];
+    return len + Math.hypot(x - px, y - py);
+  }, 0);
   return (
     <svg width="100%" viewBox={`0 0 ${w} ${h}`} className="block" preserveAspectRatio="none" aria-hidden="true">
-      <path d={area} fill={color} opacity={0.12} />
-      <path d={line} fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+      <defs>
+        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity={0.35} />
+          <stop offset="100%" stopColor={color} stopOpacity={0} />
+        </linearGradient>
+      </defs>
+      <path
+        d={area}
+        fill={`url(#${gradId})`}
+        style={{ animation: 'sparkFade 0.9s ease-out forwards' }}
+      />
+      <path
+        d={line}
+        fill="none"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeDasharray={pathLen}
+        strokeDashoffset={pathLen}
+        style={{ animation: 'sparkDraw 1.1s ease-out forwards' }}
+      />
+      <circle
+        cx={lastX}
+        cy={lastY}
+        r={2.75}
+        fill={color}
+        stroke="white"
+        strokeWidth={1}
+        style={{ animation: 'sparkFade 0.6s ease-out 0.5s both' }}
+      />
     </svg>
   );
 }
@@ -127,6 +164,10 @@ export default function ReportSlide({ slide, theme: t, isThumbnail }: ReportSlid
       className="w-full overflow-hidden"
       style={{ background: t.colors.background, color: t.colors.text }}
     >
+      <style>{`
+        @keyframes sparkDraw { to { stroke-dashoffset: 0; } }
+        @keyframes sparkFade { from { opacity: 0; } to { opacity: 1; } }
+      `}</style>
       {/* Hero */}
       <div className="relative overflow-hidden">
         {image ? (
@@ -175,12 +216,18 @@ export default function ReportSlide({ slide, theme: t, isThumbnail }: ReportSlid
           style={{ borderColor: t.colors.border, background: t.colors.surface }}
         >
           <div className="flex items-center gap-3 min-w-0">
-            <span className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 text-white" style={{ background: t.colors.gradient }}>
-              <CalendarDays className="w-4 h-4" />
+            <span className="relative flex h-5 w-5 shrink-0 items-center justify-center">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-lg bg-emerald-400 opacity-50" />
+              <span className="relative inline-flex h-5 w-5 items-center justify-center rounded-lg text-white" style={{ background: t.colors.gradient }}>
+                <CalendarDays className="w-4 h-4" />
+              </span>
             </span>
             <div className="min-w-0">
               <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: t.colors.primary }}>
-                Live dashboard
+                <span className="inline-flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  Live dashboard
+                </span>
               </p>
               <p className="text-sm font-semibold truncate" style={{ color: t.colors.text }}>
                 {content.subtitle || content.title}
@@ -219,7 +266,7 @@ export default function ReportSlide({ slide, theme: t, isThumbnail }: ReportSlid
               {content.kpis.map((kpi, i) => (
                 <div
                   key={i}
-                  className="rounded-xl border p-5 relative overflow-hidden group"
+                  className="rounded-xl border p-5 relative overflow-hidden group transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
                   style={{ borderColor: t.colors.border, background: t.colors.surface }}
                 >
                   <div
