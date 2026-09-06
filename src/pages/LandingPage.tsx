@@ -68,7 +68,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string; style?: 
 const features = [
   { icon: Layout, title: 'Professional Layouts', description: 'Expertly designed dashboard layouts that make your data shine.' },
   { icon: BarChart3, title: 'Smart Analytics', description: 'Automatically generate insightful KPI dashboards and visualizations.' },
-  { icon: PieChart, title: 'Beautiful Charts', description: 'Bar, pie, line, area, and donut charts powered by your data.' },
+  { icon: PieChart, title: 'Beautiful Charts', description: 'Bar, pie, line, area, donut, combo, and funnel charts powered by your data.' },
   { icon: Palette, title: 'Custom Themes', description: 'Ten premium color themes — one click to restyle everything.' },
   { icon: Pencil, title: 'Easy Editing', description: 'Edit content, swap layouts, or rearrange the flow in real time.' },
   { icon: Download, title: 'Instant Export', description: 'Download polished dashboards ready for any audience.' },
@@ -101,28 +101,28 @@ const previewKpis = [
 ];
 
 const previewLegend = [
-  { color: '#a78bfa', label: 'Direct', value: '42%' },
-  { color: '#e879f9', label: 'SEO', value: '26%' },
-  { color: '#f472b6', label: 'Ads', value: '16%' },
-  { color: '#22d3ee', label: 'Referral', value: '16%' },
+  { color: '#6366f1', label: 'Direct', value: '42%' },
+  { color: '#06b6d4', label: 'SEO', value: '26%' },
+  { color: '#10b981', label: 'Ads', value: '16%' },
+  { color: '#f59e0b', label: 'Referral', value: '16%' },
 ];
 
 function DashboardPreview() {
   return (
     <div className="relative w-full">
       <div
-        className="absolute -inset-4 rounded-[2rem] bg-gradient-to-r from-violet-600/25 via-fuchsia-500/15 to-pink-500/25 blur-2xl opacity-70"
+        className="absolute -inset-4 rounded-[2rem] bg-gradient-to-r from-indigo-300/40 via-sky-200/30 to-cyan-200/40 blur-2xl opacity-70"
         aria-hidden="true"
       />
-      <div className="relative rounded-[1.5rem] border border-white/10 bg-[#0d0d14] shadow-2xl shadow-black/60 overflow-hidden">
-        <div className="flex items-center gap-3 px-5 py-3 border-b border-white/5 bg-[#111118]">
+      <div className="relative rounded-[1.5rem] border border-gray-200 bg-white shadow-2xl shadow-indigo-200/50 overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3 border-b border-gray-100 bg-gray-50/80">
           <div className="flex gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#2a2a3a]" />
-            <span className="w-2.5 h-2.5 rounded-full bg-[#2a2a3a]" />
-            <span className="w-2.5 h-2.5 rounded-full bg-[#2a2a3a]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-red-300" />
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-300" />
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-300" />
           </div>
-          <div className="flex-1 max-w-[380px] mx-auto flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-white/[0.04] border border-white/5 text-[11px] text-gray-500">
-            <Layout className="w-3 h-3 text-violet-400" />
+          <div className="flex-1 max-w-[380px] mx-auto flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-white border border-gray-200 text-[11px] text-gray-500">
+            <Layout className="w-3 h-3 text-indigo-500" />
             dashcraft.ai/dashboards/revenue
           </div>
         </div>
@@ -130,10 +130,10 @@ function DashboardPreview() {
         <div className="p-5 sm:p-7">
           <div className="flex flex-wrap items-end justify-between gap-3 mb-5">
             <div>
-              <p className="text-[11px] font-medium text-violet-400 uppercase tracking-wider mb-1">
+              <p className="text-[11px] font-medium text-indigo-500 uppercase tracking-wider mb-1">
                 Single-page report
               </p>
-              <h3 className="text-[18px] sm:text-[20px] font-bold tracking-tight">
+              <h3 className="text-[18px] sm:text-[20px] font-bold tracking-tight text-gray-900">
                 Revenue Performance Dashboard
               </h3>
             </div>
@@ -141,7 +141,7 @@ function DashboardPreview() {
               {previewTags.map((t) => (
                 <span
                   key={t}
-                  className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-[10px] font-medium text-gray-400"
+                  className="px-2.5 py-1 rounded-md bg-indigo-50 border border-indigo-100 text-[10px] font-medium text-indigo-600"
                 >
                   {t}
                 </span>
@@ -151,12 +151,12 @@ function DashboardPreview() {
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
             {previewKpis.map((kpi) => (
-              <div key={kpi.label} className="rounded-xl bg-[#16161f] border border-white/5 p-3">
+              <div key={kpi.label} className="rounded-xl bg-gray-50 border border-gray-100 p-3">
                 <div className="flex items-center justify-between mb-2">
-                  <kpi.icon className="w-3.5 h-3.5 text-violet-400" />
-                  <span className="text-[10px] font-semibold text-emerald-400">{kpi.change}</span>
+                  <kpi.icon className="w-3.5 h-3.5 text-indigo-500" />
+                  <span className="text-[10px] font-semibold text-emerald-600">{kpi.change}</span>
                 </div>
-                <p className="text-[16px] sm:text-[18px] font-bold text-white leading-none mb-1">
+                <p className="text-[16px] sm:text-[18px] font-bold text-gray-900 leading-none mb-1">
                   {kpi.value}
                 </p>
                 <p className="text-[10px] text-gray-500">{kpi.label}</p>
@@ -165,50 +165,50 @@ function DashboardPreview() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
-            <div className="md:col-span-3 rounded-xl bg-[#16161f] border border-white/5 p-4">
+            <div className="md:col-span-3 rounded-xl bg-gray-50 border border-gray-100 p-4">
               <div className="flex items-center justify-between mb-4">
-                <p className="text-[12px] font-semibold text-gray-300">Monthly revenue</p>
-                <span className="text-[10px] text-gray-500">12 months</span>
+                <p className="text-[12px] font-semibold text-gray-800">Monthly revenue</p>
+                <span className="text-[10px] text-gray-400">12 months</span>
               </div>
               <div className="flex items-end gap-2 h-28">
                 {dashboardBars.map((h, i) => (
                   <div
                     key={i}
-                    className="flex-1 rounded-t bg-gradient-to-t from-violet-500/70 to-fuchsia-400/60"
-                    style={{ height: `${h}%` }}
+                    className="flex-1 rounded-t bg-gradient-to-t from-indigo-500 to-sky-400"
+                    style={{ height: `${h}%`, opacity: 0.55 + (h / 100) * 0.45 }}
                   />
                 ))}
               </div>
               <div className="flex gap-2 mt-2">
                 {dashboardLabels.map((l) => (
-                  <span key={l} className="flex-1 text-center text-[8px] text-gray-600">
+                  <span key={l} className="flex-1 text-center text-[8px] text-gray-400">
                     {l}
                   </span>
                 ))}
               </div>
             </div>
 
-            <div className="md:col-span-2 rounded-xl bg-[#16161f] border border-white/5 p-4">
-              <p className="text-[12px] font-semibold text-gray-300 mb-4">Channel mix</p>
+            <div className="md:col-span-2 rounded-xl bg-gray-50 border border-gray-100 p-4">
+              <p className="text-[12px] font-semibold text-gray-800 mb-4">Channel mix</p>
               <div className="flex items-center gap-4">
                 <div
                   className="w-24 h-24 rounded-full shrink-0"
                   style={{
                     background:
-                      'conic-gradient(#a78bfa 0 42%, #e879f9 42% 68%, #f472b6 68% 84%, #22d3ee 84% 100%)',
+                      'conic-gradient(#6366f1 0 42%, #06b6d4 42% 68%, #10b981 68% 84%, #f59e0b 84% 100%)',
                   }}
                 >
                   <div
-                    className="w-full h-full rounded-full bg-[#16161f]"
+                    className="w-full h-full rounded-full bg-gray-50"
                     style={{ transform: 'scale(0.62)' }}
                   />
                 </div>
                 <div className="space-y-2">
                   {previewLegend.map((l) => (
-                    <div key={l.label} className="flex items-center gap-2 text-[10px] text-gray-400">
+                    <div key={l.label} className="flex items-center gap-2 text-[10px] text-gray-500">
                       <span className="w-2 h-2 rounded-full" style={{ background: l.color }} />
                       {l.label}
-                      <span className="ml-auto font-semibold text-gray-300">{l.value}</span>
+                      <span className="ml-auto font-semibold text-gray-700">{l.value}</span>
                     </div>
                   ))}
                 </div>
@@ -245,8 +245,8 @@ function TemplatePreview({ color, kind }: { color: string; kind: PreviewKind }) 
         <div className="h-1.5 w-2/5 rounded-full mb-2" style={{ background: color }} />
         <div className="grid grid-cols-2 gap-1.5">
           {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="rounded-md bg-white/[0.05] border border-white/10 p-1.5">
-              <div className="h-1 w-full rounded-full bg-white/15 mb-1" />
+            <div key={i} className="rounded-md bg-white border border-gray-100 shadow-sm p-1.5">
+              <div className="h-1 w-full rounded-full bg-gray-200 mb-1" />
               <div className="h-1 w-1/2 rounded-full" style={{ background: color }} />
             </div>
           ))}
@@ -264,7 +264,7 @@ function TemplatePreview({ color, kind }: { color: string; kind: PreviewKind }) 
             background: `conic-gradient(${color} 0 40%, ${color}80 40% 70%, ${color}50 70% 88%, ${color}25 88% 100%)`,
           }}
         >
-          <div className="absolute inset-[30%] rounded-full bg-[#111118]" />
+          <div className="absolute inset-[30%] rounded-full bg-white" />
         </div>
         <div className="flex-1 space-y-1.5">
           {[72, 55, 38].map((w, i) => (
@@ -273,7 +273,7 @@ function TemplatePreview({ color, kind }: { color: string; kind: PreviewKind }) 
                 className="w-1.5 h-1.5 rounded-full"
                 style={{ background: i === 0 ? color : color + (i === 1 ? '80' : '50') }}
               />
-              <div className="flex-1 h-1 rounded-full bg-white/10 overflow-hidden">
+              <div className="flex-1 h-1 rounded-full bg-gray-200 overflow-hidden">
                 <div className="h-full rounded-full" style={{ width: `${w}%`, background: color }} />
               </div>
             </div>
@@ -358,7 +358,7 @@ function TemplatePreview({ color, kind }: { color: string; kind: PreviewKind }) 
           {[0, 1, 2, 3].map((i) => (
             <span
               key={i}
-              className="w-7 h-7 rounded-full border-2 border-[#111118] flex items-center justify-center text-[8px] font-bold text-white"
+              className="w-7 h-7 rounded-full border-2 border-white flex items-center justify-center text-[8px] font-bold text-white"
               style={{ background: [color, color + '77', color + 'AA', color + '55'][i] }}
             >
               {['A', 'S', 'R', 'J'][i]}
@@ -368,7 +368,7 @@ function TemplatePreview({ color, kind }: { color: string; kind: PreviewKind }) 
         <div className="flex-1 space-y-1.5">
           {[90, 70, 45].map((w, i) => (
             <div key={i} className="flex items-center gap-1.5">
-              <div className="flex-1 h-1 rounded-full bg-white/10 overflow-hidden">
+              <div className="flex-1 h-1 rounded-full bg-gray-200 overflow-hidden">
                 <div className="h-full rounded-full" style={{ width: `${w}%`, background: color }} />
               </div>
               <span className="text-[7px] text-gray-500 w-5 text-right">{w}%</span>
@@ -385,7 +385,7 @@ function TemplatePreview({ color, kind }: { color: string; kind: PreviewKind }) 
         <div className="relative w-24 h-12 overflow-hidden">
           <div
             className="absolute inset-x-0 top-0 h-full rounded-t-full"
-            style={{ background: `conic-gradient(${color} 0 260deg, #ffffff15 260deg 360deg)` }}
+            style={{ background: `conic-gradient(${color} 0 260deg, #e2e8f0 260deg 360deg)` }}
           />
         </div>
         <div className="flex items-center gap-1.5">
@@ -407,7 +407,7 @@ function TemplatePreview({ color, kind }: { color: string; kind: PreviewKind }) 
       ].map((r) => (
         <div key={r.label} className="flex items-center gap-2">
           <span className="text-[8px] text-gray-500 w-12">{r.label}</span>
-          <div className="flex-1 h-1.5 rounded-full bg-white/10 overflow-hidden">
+          <div className="flex-1 h-1.5 rounded-full bg-gray-200 overflow-hidden">
             <div className="h-full rounded-full" style={{ width: `${r.w}%`, background: color }} />
           </div>
           <span className="text-[8px] font-semibold w-7 text-right" style={{ color }}>
@@ -479,25 +479,25 @@ function DatasetPivot({
       ? formatNumber(n)
       : n.toLocaleString('en-US', { maximumFractionDigits: 2 });
   const selectCls =
-    'w-full bg-[#111118] border border-white/10 rounded-lg text-[12px] text-gray-300 px-2.5 py-2 outline-none focus:border-violet-500/40 appearance-none cursor-pointer';
+    'w-full bg-white border border-gray-200 rounded-lg text-[13px] text-gray-800 px-2.5 py-2 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 appearance-none cursor-pointer';
   const inlineSel = selectCls.replace('w-full', 'w-auto');
   const showShare = pivot !== null && (pivot.agg === 'sum' || pivot.agg === 'count');
 
   if (!activeSheet) return null;
 
   return (
-    <div className="mt-2.5 rounded-xl border border-violet-500/25 bg-violet-500/[0.06] p-3">
+    <div className="mt-2.5 rounded-xl border border-indigo-200 bg-indigo-50/60 p-3">
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2 text-[12px] text-gray-200 min-w-0">
-          <FileSpreadsheet className="w-4 h-4 text-violet-400 shrink-0" />
-          <span className="truncate max-w-[160px]">{workbook.name}</span>
-          <span className="text-gray-500 shrink-0">
+        <div className="flex items-center gap-2 text-[12px] text-gray-700 min-w-0">
+          <FileSpreadsheet className="w-4 h-4 text-indigo-600 shrink-0" />
+          <span className="truncate max-w-[160px] font-medium">{workbook.name}</span>
+          <span className="text-gray-400 shrink-0">
             {activeSheet.name} · {activeSheet.rowCount} rows
           </span>
         </div>
         <button
           onClick={onRemove}
-          className="text-gray-500 hover:text-white transition-colors shrink-0"
+          className="text-gray-400 hover:text-gray-800 transition-colors shrink-0"
           aria-label="Remove data file"
         >
           <X className="w-3.5 h-3.5" />
@@ -584,8 +584,8 @@ function DatasetPivot({
 
       <div className="flex flex-wrap items-center gap-2 mb-2.5">
         {dimIsDate && (
-          <label className="flex items-center gap-1.5 text-[11px] text-gray-400">
-            <Calendar className="w-3.5 h-3.5 text-violet-400 shrink-0" />
+          <label className="flex items-center gap-1.5 text-[11px] text-gray-600">
+            <Calendar className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
             Group by
             <select
               value={pivotGran}
@@ -598,8 +598,8 @@ function DatasetPivot({
             </select>
           </label>
         )}
-        <label className="flex items-center gap-1.5 text-[11px] text-gray-400">
-          <ListFilter className="w-3.5 h-3.5 text-violet-400 shrink-0" />
+        <label className="flex items-center gap-1.5 text-[11px] text-gray-600">
+          <ListFilter className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
           Top
           <select
             value={pivotLimit}
@@ -617,8 +617,8 @@ function DatasetPivot({
               className={cn(
                 'px-2 py-1 rounded-lg text-[11px] border transition-colors',
                 pivotRest
-                  ? 'bg-violet-500/15 border-violet-500/40 text-violet-300'
-                  : 'bg-white/5 border-white/10 text-gray-500'
+                  ? 'bg-indigo-600/10 border-indigo-300 text-indigo-700'
+                  : 'bg-white border-gray-200 text-gray-500'
               )}
             >
               + Other
@@ -628,10 +628,10 @@ function DatasetPivot({
       </div>
 
       {pivot ? (
-        <div className="rounded-lg bg-[#14141e] border border-white/5 overflow-hidden">
+        <div className="rounded-lg bg-white border border-gray-200 overflow-hidden shadow-sm">
           <table className="w-full text-[11px]">
             <thead>
-              <tr className="text-left text-[10px] text-gray-500 border-b border-white/5">
+              <tr className="text-left text-[10px] text-gray-500 border-b border-gray-100">
                 <th className="px-2.5 py-1.5 font-medium">{pivot.dimension}</th>
                 <th className="px-2.5 py-1.5 font-medium text-right">
                   {pivot.agg} of {pivot.measure}
@@ -643,23 +643,23 @@ function DatasetPivot({
             </thead>
             <tbody>
               {pivot.buckets.slice(0, 5).map((b) => (
-                <tr key={b.label} className="border-b border-white/5 last:border-0">
-                  <td className="px-2.5 py-1.5 text-gray-300 truncate max-w-[220px]">
+                <tr key={b.label} className="border-b border-gray-100 last:border-0">
+                  <td className="px-2.5 py-1.5 text-gray-700 truncate max-w-[220px]">
                     {b.label}
                   </td>
-                  <td className="px-2.5 py-1.5 text-right text-gray-200">
+                  <td className="px-2.5 py-1.5 text-right text-gray-800">
                     {fmtVal(b.value)}
                   </td>
                   {showShare && (
-                    <td className="px-2.5 py-1.5 text-right text-gray-400">
+                    <td className="px-2.5 py-1.5 text-right text-gray-500">
                       {b.share !== undefined ? `${Math.round(b.share * 100)}%` : '—'}
                     </td>
                   )}
                 </tr>
               ))}
-              <tr className="bg-white/[0.03]">
-                <td className="px-2.5 py-1.5 font-semibold text-gray-400">Total</td>
-                <td className="px-2.5 py-1.5 text-right font-semibold text-violet-300">
+              <tr className="bg-gray-50">
+                <td className="px-2.5 py-1.5 font-semibold text-gray-600">Total</td>
+                <td className="px-2.5 py-1.5 text-right font-semibold text-indigo-600">
                   {pivot.agg === 'count'
                     ? `${pivot.count} records`
                     : pivot.agg === 'avg'
@@ -672,18 +672,18 @@ function DatasetPivot({
               </tr>
             </tbody>
           </table>
-          <div className="px-2.5 py-1.5 border-t border-white/5 text-[11px] text-gray-500 flex items-center justify-between">
+          <div className="px-2.5 py-1.5 border-t border-gray-100 text-[11px] text-gray-500 flex items-center justify-between bg-gray-50/60">
             <span>
               Chart: {pivot.agg.toUpperCase()} of {pivot.measure} by {pivot.dimension}
               {pivot.granularity ? ` (${pivot.granularity})` : ''} · {pivot.count} records
             </span>
             {pivot.buckets.length > 5 && (
-              <span className="text-gray-600">+{pivot.buckets.length - 5} more</span>
+              <span className="text-gray-400">+{pivot.buckets.length - 5} more</span>
             )}
           </div>
         </div>
       ) : (
-        <p className="text-[11px] text-amber-400/90">
+        <p className="text-[11px] text-amber-600">
           Nothing to aggregate — the sheet has no usable columns.
         </p>
       )}
@@ -926,13 +926,13 @@ export default function LandingPage() {
   };
 
   return (
-    <div id="top" className="min-h-screen bg-[#09090b] text-white selection:bg-violet-500/30">
+    <div id="top" className="min-h-screen bg-white text-gray-900 selection:bg-indigo-500/20">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-[#09090b]/80 backdrop-blur-xl">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-xl">
         <div className="max-w-[1280px] mx-auto px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-8">
             <a href="/" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center shadow-lg shadow-violet-500/25 group-hover:shadow-violet-500/40 transition-shadow">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-sky-500 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:shadow-indigo-500/40 transition-shadow">
                 <Layers className="w-4 h-4 text-white" />
               </div>
               <span className="text-[15px] font-bold tracking-tight">DashCraft AI</span>
@@ -942,7 +942,7 @@ export default function LandingPage() {
                 <a
                   key={link}
                   href={`#${link.toLowerCase()}`}
-                  className="px-3 py-1.5 text-[13px] font-medium text-gray-400 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+                  className="px-3 py-1.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors rounded-lg hover:bg-gray-100"
                 >
                   {link}
                 </a>
@@ -951,7 +951,7 @@ export default function LandingPage() {
                 href="https://github.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 py-1.5 text-[13px] font-medium text-gray-400 hover:text-white transition-colors rounded-lg hover:bg-white/5 flex items-center gap-1.5"
+                className="px-3 py-1.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors rounded-lg hover:bg-gray-100 flex items-center gap-1.5"
               >
                 <GithubIcon className="w-3.5 h-3.5" />
                 GitHub
@@ -965,7 +965,7 @@ export default function LandingPage() {
                 setTimeout(() => promptRef.current?.focus(), 400);
               }}
               aria-label="Log in (coming soon, start creating)"
-              className="px-4 py-2 text-[13px] font-medium text-gray-400 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+              className="px-4 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors rounded-lg hover:bg-gray-100"
             >
               Log in
             </button>
@@ -974,7 +974,7 @@ export default function LandingPage() {
                 promptRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 setTimeout(() => promptRef.current?.focus(), 400);
               }}
-              className="px-4 py-2 text-[13px] font-semibold text-white bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-500/20 hover:shadow-violet-500/30"
+              className="px-4 py-2 text-[13px] font-semibold text-white bg-gradient-to-r from-indigo-600 to-sky-600 rounded-lg hover:from-indigo-500 hover:to-sky-500 transition-all shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30"
             >
               Get Started
             </button>
@@ -984,9 +984,9 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section className="relative overflow-hidden pt-36 pb-28">
-        <div className="absolute top-[-300px] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] rounded-full bg-gradient-to-br from-violet-600/15 via-fuchsia-500/8 to-transparent blur-3xl pointer-events-none" />
-        <div className="absolute top-[50px] right-[-150px] w-[500px] h-[500px] rounded-full bg-blue-500/8 blur-3xl pointer-events-none" />
-        <div className="absolute top-[200px] left-[-100px] w-[400px] h-[400px] rounded-full bg-pink-500/5 blur-3xl pointer-events-none" />
+        <div className="absolute top-[-300px] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] rounded-full bg-gradient-to-br from-indigo-200/40 via-sky-200/30 to-transparent blur-3xl pointer-events-none" />
+        <div className="absolute top-[50px] right-[-150px] w-[500px] h-[500px] rounded-full bg-sky-200/40 blur-3xl pointer-events-none" />
+        <div className="absolute top-[200px] left-[-100px] w-[400px] h-[400px] rounded-full bg-cyan-200/40 blur-3xl pointer-events-none" />
 
         <div className="max-w-[720px] mx-auto text-center relative z-10 px-8">
           <motion.div
@@ -994,8 +994,8 @@ export default function LandingPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-[13px] text-gray-400 mb-8">
-              <Sparkles className="w-3.5 h-3.5 text-violet-400" />
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 bg-white shadow-sm text-[13px] text-gray-600 mb-8">
+              <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
               AI-powered dashboard generator
             </div>
           </motion.div>
@@ -1007,13 +1007,13 @@ export default function LandingPage() {
             transition={{ duration: 0.6, delay: 0.1 }}
           >
             Create Stunning{' '}
-            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-indigo-600 via-blue-500 to-sky-500 bg-clip-text text-transparent">
               Dashboards
             </span>
           </motion.h1>
 
           <motion.p
-            className="text-[18px] text-gray-400 max-w-[520px] mx-auto mb-12 leading-relaxed"
+            className="text-[18px] text-gray-500 max-w-[520px] mx-auto mb-12 leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -1029,8 +1029,8 @@ export default function LandingPage() {
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-violet-600 via-fuchsia-500 to-pink-500 rounded-2xl opacity-15 group-hover:opacity-30 blur-lg transition duration-500" />
-              <div className="relative bg-[#111118] border border-[#26263b] rounded-2xl p-5">
+              <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-blue-400 to-sky-400 rounded-2xl opacity-20 group-hover:opacity-40 blur-lg transition duration-500" />
+              <div className="relative bg-white border border-gray-200 shadow-xl shadow-gray-200/60 rounded-2xl p-5">
                 <textarea
                   ref={promptRef}
                   value={prompt}
@@ -1043,7 +1043,7 @@ export default function LandingPage() {
                   }}
                   placeholder="Describe your dashboard..."
                   rows={2}
-                  className="w-full bg-transparent text-white placeholder-gray-500 resize-none outline-none text-[16px] leading-relaxed"
+                  className="w-full bg-transparent text-gray-900 placeholder-gray-400 resize-none outline-none text-[16px] leading-relaxed"
                 />
                 <div className="mt-3">
                   <input
@@ -1078,20 +1078,20 @@ export default function LandingPage() {
                       handleFiles(e.dataTransfer.files);
                     }}
                     className={cn(
-                      'flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border border-dashed text-[13px] text-gray-500 transition-colors cursor-pointer',
+                      'flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border border-dashed text-[13px] transition-colors cursor-pointer',
                       dragging
-                        ? 'border-violet-400/60 bg-violet-500/10 text-violet-300'
-                        : 'border-white/10 bg-white/[0.02] hover:border-white/25 hover:text-gray-300'
+                        ? 'border-indigo-400 bg-indigo-50 text-indigo-600'
+                        : 'border-gray-300 bg-gray-50 text-gray-500 hover:border-gray-400 hover:text-gray-700'
                     )}
                   >
                     <Upload className="w-4 h-4" />
                     <span>
-                      Add documents <span className="text-gray-600">(TXT, MD, JSON, PDF) or Excel/CSV data — drop or browse</span>
+                      Add documents <span className="text-gray-400">(TXT, MD, JSON, PDF) or Excel/CSV data — drop or browse</span>
                     </span>
                   </div>
 
                   {uploadError && (
-                    <p className="mt-2 text-[12px] text-rose-400/90">{uploadError}</p>
+                    <p className="mt-2 text-[12px] text-rose-500">{uploadError}</p>
                   )}
 
                   {docs.length > 0 && (
@@ -1099,14 +1099,14 @@ export default function LandingPage() {
                       {docs.map((doc) => (
                         <span
                           key={doc.id}
-                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[12px] text-gray-300"
+                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-[12px] text-gray-700 shadow-sm"
                         >
-                          <FileText className="w-3.5 h-3.5 text-violet-400" />
+                          <FileText className="w-3.5 h-3.5 text-indigo-500" />
                           <span className="max-w-[220px] truncate">{doc.name}</span>
-                          <span className="text-gray-600 text-[11px]">{formatBytes(doc.size)}</span>
+                          <span className="text-gray-400 text-[11px]">{formatBytes(doc.size)}</span>
                           <button
                             onClick={() => setDocs((prev) => prev.filter((d) => d.id !== doc.id))}
-                            className="text-gray-500 hover:text-white transition-colors"
+                            className="text-gray-400 hover:text-gray-900 transition-colors"
                             aria-label={`Remove ${doc.name}`}
                           >
                             <X className="w-3.5 h-3.5" />
@@ -1146,15 +1146,15 @@ export default function LandingPage() {
                     </div>
                   )}
                 </div>
-                <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
-                  <p className="text-[12px] text-gray-600 flex items-center gap-2 flex-wrap">
-                    Press <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-gray-500 text-[11px] font-mono">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-gray-500 text-[11px] font-mono">Enter</kbd> to generate
+                <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+                  <p className="text-[12px] text-gray-500 flex items-center gap-2 flex-wrap">
+                    Press <kbd className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-300 text-gray-500 text-[11px] font-mono">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-300 text-gray-500 text-[11px] font-mono">Enter</kbd> to generate
                     {aiAvailable ? (
-                      <span className="inline-flex items-center gap-1 text-violet-400">
+                      <span className="inline-flex items-center gap-1 text-indigo-600">
                         <Sparkles className="w-3 h-3" /> AI generates topic-specific charts &amp; KPIs
                       </span>
                     ) : (
-                      <span className="text-gray-600">· AI off — add <code className="text-[11px] font-mono text-gray-500">VITE_GROQ_API_KEY</code> to <code className="text-[11px] font-mono text-gray-500">.env</code></span>
+                      <span className="text-gray-400">· AI off — add <code className="text-[11px] font-mono text-gray-500">VITE_GROQ_API_KEY</code> to <code className="text-[11px] font-mono text-gray-500">.env</code></span>
                     )}
                   </p>
                   <button
@@ -1163,13 +1163,13 @@ export default function LandingPage() {
                     className={cn(
                       'relative inline-flex items-center gap-2.5 px-8 py-3 rounded-xl font-semibold text-[15px] transition-all duration-300',
                       canGenerate && !isGenerating
-                        ? 'bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-600 hover:from-violet-500 hover:via-fuchsia-500 hover:to-pink-500 text-white shadow-xl shadow-violet-500/25 hover:shadow-violet-500/40 hover:scale-[1.02] active:scale-[0.98] cursor-pointer'
-                        : 'bg-white/5 text-gray-500 cursor-not-allowed'
+                        ? 'bg-gradient-to-r from-indigo-600 via-blue-500 to-sky-500 hover:from-indigo-500 hover:via-blue-400 hover:to-sky-400 text-white shadow-xl shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98] cursor-pointer'
+                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     )}
                   >
                     {isGenerating ? (
                       <>
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <div className="w-4 h-4 border-2 border-indigo-300 border-t-indigo-600 rounded-full animate-spin" />
                         Generating...
                       </>
                     ) : (
@@ -1193,26 +1193,26 @@ export default function LandingPage() {
                 exit={{ opacity: 0, height: 0, marginTop: 0 }}
                 className="max-w-[640px] mx-auto overflow-hidden"
               >
-                <div className="bg-[#111118] border border-[#26263b] rounded-xl p-5">
+                <div className="bg-white border border-gray-200 shadow-xl shadow-gray-200/60 rounded-xl p-5">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-5 h-5 border-2 border-violet-500/30 border-t-violet-500 rounded-full animate-spin" />
-                    <span className="text-[13px] font-medium text-white">
+                    <div className="w-5 h-5 border-2 border-indigo-300 border-t-indigo-600 rounded-full animate-spin" />
+                    <span className="text-[13px] font-medium text-gray-800">
                       {generationSteps[generationStep]}
                     </span>
                     <span className="ml-auto text-[12px] text-gray-500">
                       {Math.round(((generationStep + 1) / generationSteps.length) * 100)}%
                     </span>
                   </div>
-                  <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                     <motion.div
-                      className="h-full bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 rounded-full"
+                      className="h-full bg-gradient-to-r from-indigo-500 via-blue-500 to-sky-500 rounded-full"
                       initial={{ width: '0%' }}
                       animate={{ width: `${((generationStep + 1) / generationSteps.length) * 100}%` }}
                       transition={{ duration: 0.4, ease: 'easeOut' }}
                     />
                   </div>
                   {generationMode && (
-                    <p className="mt-3 text-[12px] text-amber-400/90">
+                    <p className="mt-3 text-[12px] text-amber-600">
                       {generationMode}
                     </p>
                   )}
@@ -1221,23 +1221,19 @@ export default function LandingPage() {
                       <div key={step} className="flex items-center gap-2.5">
                         <div className={cn(
                           'w-4 h-4 rounded-full flex items-center justify-center shrink-0 transition-all duration-300',
-                          i < generationStep
-                            ? 'bg-violet-500/20'
-                            : i === generationStep
-                            ? 'bg-violet-500/20'
-                            : 'bg-white/5'
+                          i <= generationStep ? 'bg-indigo-50' : 'bg-gray-100'
                         )}>
                           {i < generationStep ? (
-                            <Check className="w-2.5 h-2.5 text-violet-400" />
+                            <Check className="w-2.5 h-2.5 text-indigo-500" />
                           ) : i === generationStep ? (
-                            <div className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
+                            <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
                           ) : (
-                            <div className="w-1.5 h-1.5 rounded-full bg-gray-600" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-gray-300" />
                           )}
                         </div>
                         <span className={cn(
                           'text-[13px] transition-colors duration-300',
-                          i <= generationStep ? 'text-gray-300' : 'text-gray-600'
+                          i <= generationStep ? 'text-gray-700' : 'text-gray-400'
                         )}>
                           {step}
                         </span>
@@ -1265,7 +1261,7 @@ export default function LandingPage() {
 
       {/* Templates */}
       <section id="templates" className="py-28 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#09090b] via-[#0c0c14] to-[#09090b] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-50/80 to-white pointer-events-none" />
         <div className="max-w-[1280px] mx-auto px-8 relative z-10">
           <motion.div
             className="text-center mb-16"
@@ -1275,9 +1271,9 @@ export default function LandingPage() {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-[40px] font-bold tracking-tight mb-4">Start with a Template</h2>
-            <p className="text-[16px] text-gray-400 mb-6">Pick a starting point and customize it to your needs</p>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-[12px] text-gray-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+            <p className="text-[16px] text-gray-500 mb-6">Pick a starting point and customize it to your needs</p>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-gray-200 shadow-sm text-[12px] text-gray-500">
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
               {templates.length} ready-made dashboard layouts
             </div>
           </motion.div>
@@ -1294,20 +1290,20 @@ export default function LandingPage() {
                   viewport={{ once: true, margin: '-30px' }}
                   transition={{ delay: i * 0.04, duration: 0.4 }}
                   whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                  className="group text-left p-5 rounded-xl bg-[#111118] border border-[#26263b] hover:border-violet-500/30 transition-all duration-300 hover:shadow-2xl hover:shadow-violet-500/10 cursor-pointer flex flex-col"
+                  className="group text-left p-5 rounded-xl bg-white border border-gray-200 hover:border-indigo-300 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/10 cursor-pointer flex flex-col"
                 >
                   <div
-                    className="relative h-[86px] rounded-xl overflow-hidden mb-4 border border-white/5"
-                    style={{ background: `linear-gradient(135deg, ${template.color}2b, ${template.color}12)` }}
+                    className="relative h-[86px] rounded-xl overflow-hidden mb-4 border border-gray-100"
+                    style={{ background: `linear-gradient(135deg, ${template.color}21, ${template.color}0d)` }}
                   >
                     <TemplatePreview color={template.color} kind={previewKindFor[template.id] ?? 'bars'} />
                     <span
-                      className="absolute top-2.5 right-2.5 inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full text-white/90"
-                      style={{ background: template.color + '33', border: `1px solid ${template.color}55` }}
+                      className="absolute top-2.5 right-2.5 inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full text-white"
+                      style={{ background: template.color }}
                     >
                       {template.category}
                     </span>
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/30">
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/60">
                       <span
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-white shadow-lg"
                         style={{ background: template.color }}
@@ -1325,12 +1321,12 @@ export default function LandingPage() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold text-[14px] text-white truncate">{template.name}</h3>
+                        <h3 className="font-semibold text-[14px] text-gray-900 truncate">{template.name}</h3>
                       </div>
                     </div>
                   </div>
                   <p className="text-[13px] text-gray-500 leading-relaxed flex-1">{template.description}</p>
-                  <div className="flex items-center gap-1.5 mt-4 text-[12px] font-medium text-gray-500 group-hover:text-violet-400 transition-colors duration-300">
+                  <div className="flex items-center gap-1.5 mt-4 text-[12px] font-medium text-gray-500 group-hover:text-indigo-600 transition-colors duration-300">
                     Use template <ArrowRight className="w-3 h-3" />
                   </div>
                 </motion.button>
@@ -1341,8 +1337,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section id="features" className="py-28 relative">
-        <div className="absolute inset-0 bg-[#09090b] pointer-events-none" />
+      <section id="features" className="py-28 relative bg-gray-50">
         <div className="max-w-[1280px] mx-auto px-8 relative z-10">
           <motion.div
             className="text-center mb-16"
@@ -1352,7 +1347,7 @@ export default function LandingPage() {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-[40px] font-bold tracking-tight mb-4">Why DashCraft AI?</h2>
-            <p className="text-[16px] text-gray-400">Everything you need to create world-class dashboards</p>
+            <p className="text-[16px] text-gray-500">Everything you need to create world-class dashboards</p>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -1366,14 +1361,14 @@ export default function LandingPage() {
                   viewport={{ once: true, margin: '-30px' }}
                   transition={{ delay: i * 0.06, duration: 0.4 }}
                   whileHover={{ y: -3, transition: { duration: 0.2 } }}
-                  className="p-6 rounded-xl bg-[#111118] border border-[#26263b] hover:border-violet-500/20 transition-all duration-300 hover:shadow-xl hover:shadow-violet-500/5 flex flex-col"
+                  className="p-6 rounded-xl bg-white border border-gray-200 hover:border-indigo-200 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/5 flex flex-col"
                   style={{ minHeight: 180 }}
                 >
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500/15 to-fuchsia-500/15 border border-white/5 flex items-center justify-center mb-4">
-                    <Icon className="w-5 h-5 text-violet-400" />
+                  <div className="w-10 h-10 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-4">
+                    <Icon className="w-5 h-5 text-indigo-600" />
                   </div>
-                  <h3 className="font-semibold text-[16px] mb-2">{feature.title}</h3>
-                  <p className="text-[14px] text-gray-400 leading-relaxed flex-1">{feature.description}</p>
+                  <h3 className="font-semibold text-[16px] mb-2 text-gray-900">{feature.title}</h3>
+                  <p className="text-[14px] text-gray-500 leading-relaxed flex-1">{feature.description}</p>
                 </motion.div>
               );
             })}
@@ -1383,7 +1378,6 @@ export default function LandingPage() {
 
       {/* Docs / How it works */}
       <section id="docs" className="py-28 relative">
-        <div className="absolute inset-0 bg-[#09090b] pointer-events-none" />
         <div className="max-w-[1280px] mx-auto px-8 relative z-10">
           <motion.div
             className="text-center mb-16"
@@ -1393,12 +1387,12 @@ export default function LandingPage() {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-[40px] font-bold tracking-tight mb-4">How It Works</h2>
-            <p className="text-[16px] text-gray-400">Three steps from idea to dashboard</p>
+            <p className="text-[16px] text-gray-500">Three steps from idea to dashboard</p>
           </motion.div>
 
           <div className="relative grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[1100px] mx-auto">
             <div
-              className="hidden md:block absolute left-[16%] right-[16%] top-[52px] h-px bg-gradient-to-r from-violet-500/0 via-violet-500/25 to-violet-500/0 pointer-events-none"
+              className="hidden md:block absolute left-[16%] right-[16%] top-[52px] h-px bg-gradient-to-r from-indigo-400/0 via-indigo-400/30 to-indigo-400/0 pointer-events-none"
               aria-hidden="true"
             />
             {[
@@ -1412,18 +1406,18 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-30px' }}
                 transition={{ delay: i * 0.08, duration: 0.4 }}
-                className="relative z-10 p-6 rounded-xl bg-[#111118] border border-[#26263b] hover:border-violet-500/25 transition-all duration-300 hover:shadow-xl hover:shadow-violet-500/5"
+                className="relative z-10 p-6 rounded-xl bg-white border border-gray-200 hover:border-indigo-200 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/5"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/15 border border-white/5 flex items-center justify-center">
-                    <doc.icon className="w-5 h-5 text-violet-400" />
+                  <div className="w-11 h-11 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center">
+                    <doc.icon className="w-5 h-5 text-indigo-600" />
                   </div>
-                  <div className="text-[28px] font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent leading-none">
+                  <div className="text-[28px] font-bold bg-gradient-to-r from-indigo-500 to-sky-500 bg-clip-text text-transparent leading-none">
                     {doc.step}
                   </div>
                 </div>
-                <h3 className="font-semibold text-[16px] mb-2">{doc.title}</h3>
-                <p className="text-[14px] text-gray-400 leading-relaxed">{doc.desc}</p>
+                <h3 className="font-semibold text-[16px] mb-2 text-gray-900">{doc.title}</h3>
+                <p className="text-[14px] text-gray-500 leading-relaxed">{doc.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -1431,8 +1425,7 @@ export default function LandingPage() {
       </section>
 
       {/* Stats Bar */}
-      <section className="py-16 relative border-y border-white/5">
-        <div className="absolute inset-0 bg-gradient-to-r from-violet-600/5 via-fuchsia-500/5 to-pink-500/5 pointer-events-none" />
+      <section className="py-16 relative border-y border-gray-200 bg-gradient-to-r from-indigo-50/70 via-sky-50/70 to-cyan-50/70">
         <div className="max-w-[1280px] mx-auto px-8 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
@@ -1449,7 +1442,7 @@ export default function LandingPage() {
                 transition={{ delay: i * 0.1, duration: 0.4 }}
                 className="text-center"
               >
-                <div className="text-[32px] font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent mb-1">
+                <div className="text-[32px] font-bold bg-gradient-to-r from-indigo-600 to-sky-600 bg-clip-text text-transparent mb-1">
                   {stat.value}
                 </div>
                 <div className="text-[13px] text-gray-500 font-medium">{stat.label}</div>
@@ -1461,7 +1454,7 @@ export default function LandingPage() {
 
       {/* Recent Dashboards */}
       <section id="recent" className="py-28 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#09090b] via-[#0c0c14] to-[#09090b] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-50/60 to-white pointer-events-none" />
         <div className="max-w-[1280px] mx-auto px-8 relative z-10">
           <motion.div
             className="text-center mb-16"
@@ -1471,7 +1464,7 @@ export default function LandingPage() {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-[40px] font-bold tracking-tight mb-4">Recent Dashboards</h2>
-            <p className="text-[16px] text-gray-400">
+            <p className="text-[16px] text-gray-500">
               {presentations.length > 0 ? 'Pick up where you left off' : 'Your generated dashboards will appear here'}
             </p>
           </motion.div>
@@ -1482,13 +1475,13 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.4 }}
-              className="max-w-[560px] mx-auto text-center py-12 px-8 rounded-2xl bg-[#111118] border border-dashed border-[#2a2a44]"
+              className="max-w-[560px] mx-auto text-center py-12 px-8 rounded-2xl bg-white border border-dashed border-gray-300"
             >
-              <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-violet-500/15 to-fuchsia-500/15 border border-white/5 flex items-center justify-center">
-                <FileText className="w-7 h-7 text-violet-400" />
+              <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center">
+                <FileText className="w-7 h-7 text-indigo-500" />
               </div>
               <h3 className="font-semibold text-[17px] mb-2">No dashboards yet</h3>
-              <p className="text-[14px] text-gray-400 leading-relaxed mb-6">
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-6">
                 Describe what you want above and your first dashboard will show up here instantly.
               </p>
               <button
@@ -1496,7 +1489,7 @@ export default function LandingPage() {
                   promptRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                   setTimeout(() => promptRef.current?.focus(), 400);
                 }}
-                className="inline-flex items-center gap-2 px-5 py-2.5 text-[13px] font-semibold text-white bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-lg hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-500/20"
+                className="inline-flex items-center gap-2 px-5 py-2.5 text-[13px] font-semibold text-white bg-gradient-to-r from-indigo-600 to-sky-600 rounded-lg hover:from-indigo-500 hover:to-sky-500 transition-all shadow-lg shadow-indigo-500/20"
               >
                 <Sparkles className="w-4 h-4" />
                 Create your first dashboard
@@ -1513,14 +1506,14 @@ export default function LandingPage() {
                   transition={{ delay: i * 0.05, duration: 0.4 }}
                   whileHover={{ y: -3, transition: { duration: 0.2 } }}
                   onClick={() => navigate(`/present/${p.id}`)}
-                  className="group text-left p-5 rounded-xl bg-[#111118] border border-[#26263b] hover:border-violet-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-violet-500/10 cursor-pointer"
+                  className="group text-left p-5 rounded-xl bg-white border border-gray-200 hover:border-indigo-300 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/10 cursor-pointer"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-violet-500/15 to-fuchsia-500/15 border border-white/5 flex items-center justify-center shrink-0">
-                      <FileText className="w-4 h-4 text-violet-400" />
+                    <div className="w-9 h-9 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center shrink-0">
+                      <FileText className="w-4 h-4 text-indigo-600" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="font-semibold text-[14px] truncate mb-1 group-hover:text-violet-300 transition-colors">
+                      <h3 className="font-semibold text-[14px] truncate mb-1 group-hover:text-indigo-600 text-gray-900 transition-colors">
                         {p.title}
                       </h3>
                       <div className="flex items-center gap-3 text-[12px] text-gray-500">
@@ -1541,9 +1534,9 @@ export default function LandingPage() {
 
       {/* CTA */}
       <section className="py-24 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#09090b] via-[#0d0c18] to-[#09090b] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-indigo-50/40 to-white pointer-events-none" />
         <div
-          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] rounded-full bg-gradient-to-r from-violet-600/15 via-fuchsia-500/10 to-pink-500/15 blur-3xl pointer-events-none"
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] rounded-full bg-gradient-to-r from-indigo-200/50 via-sky-200/40 to-cyan-200/50 blur-3xl pointer-events-none"
           aria-hidden="true"
         />
         <motion.div
@@ -1555,11 +1548,11 @@ export default function LandingPage() {
         >
           <h2 className="text-[36px] sm:text-[44px] font-bold tracking-tight mb-4">
             Ready to build your next{' '}
-            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-indigo-600 via-blue-500 to-sky-500 bg-clip-text text-transparent">
               dashboard?
             </span>
           </h2>
-          <p className="text-[16px] text-gray-400 max-w-[520px] mx-auto mb-8">
+          <p className="text-[16px] text-gray-500 max-w-[520px] mx-auto mb-8">
             Describe your idea or drop a document — get a polished, notebook-style dashboard in seconds.
           </p>
           <button
@@ -1567,7 +1560,7 @@ export default function LandingPage() {
               promptRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
               setTimeout(() => promptRef.current?.focus(), 400);
             }}
-            className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl font-semibold text-[15px] text-white bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-600 hover:from-violet-500 hover:via-fuchsia-500 hover:to-pink-500 transition-all shadow-xl shadow-violet-500/25 hover:shadow-violet-500/40 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+            className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl font-semibold text-[15px] text-white bg-gradient-to-r from-indigo-600 via-blue-500 to-sky-500 hover:from-indigo-500 hover:via-blue-400 hover:to-sky-400 transition-all shadow-xl shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
           >
             <Sparkles className="w-4.5 h-4.5" />
             Create your first dashboard
@@ -1576,12 +1569,12 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 bg-[#09090b]">
+      <footer className="border-t border-gray-200 bg-white">
         <div className="max-w-[1280px] mx-auto px-8 py-16">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-10">
             <div className="col-span-2 md:col-span-2">
               <a href="/" className="flex items-center gap-2.5 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center shadow-lg shadow-violet-500/20">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-sky-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
                   <Layers className="w-4 h-4 text-white" />
                 </div>
                 <span className="text-[15px] font-bold tracking-tight">DashCraft AI</span>
@@ -1592,7 +1585,7 @@ export default function LandingPage() {
               </p>
             </div>
             <div>
-              <h4 className="text-[13px] font-semibold text-white mb-4">Product</h4>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Product</h4>
               <ul className="space-y-2.5">
                 {[
                   { label: 'Templates', href: '#templates' },
@@ -1602,39 +1595,39 @@ export default function LandingPage() {
                   { label: 'Docs', href: '#docs' },
                 ].map((item) => (
                   <li key={item.label}>
-                    <a href={item.href} className="text-[13px] text-gray-500 hover:text-white transition-colors">{item.label}</a>
+                    <a href={item.href} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors">{item.label}</a>
                   </li>
                 ))}
               </ul>
             </div>
             <div>
-              <h4 className="text-[13px] font-semibold text-white mb-4">Company</h4>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Company</h4>
               <ul className="space-y-2.5">
                 {['About', 'Blog', 'Careers', 'Press'].map((item) => (
                   <li key={item}>
-                    <a href="#top" className="text-[13px] text-gray-500 hover:text-white transition-colors">{item}</a>
+                    <a href="#top" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors">{item}</a>
                   </li>
                 ))}
               </ul>
             </div>
             <div>
-              <h4 className="text-[13px] font-semibold text-white mb-4">Support</h4>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Support</h4>
               <ul className="space-y-2.5">
                 {['FAQ', 'Contact', 'Privacy', 'Terms'].map((item) => (
                   <li key={item}>
-                    <a href="#top" className="text-[13px] text-gray-500 hover:text-white transition-colors">{item}</a>
+                    <a href="#top" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors">{item}</a>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
-          <div className="mt-14 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-[13px] text-gray-600">&copy; {new Date().getFullYear()} DashCraft AI. All rights reserved.</p>
+          <div className="mt-14 pt-8 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-[13px] text-gray-400">&copy; {new Date().getFullYear()} DashCraft AI. All rights reserved.</p>
             <div className="flex items-center gap-4">
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-white transition-colors" aria-label="GitHub">
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-900 transition-colors" aria-label="GitHub">
                 <GithubIcon className="w-4 h-4" />
               </a>
-              <a href="https://x.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-white transition-colors" aria-label="X (Twitter)">
+              <a href="https://x.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-900 transition-colors" aria-label="X (Twitter)">
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
               </a>
             </div>
